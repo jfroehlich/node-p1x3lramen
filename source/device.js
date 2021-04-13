@@ -73,7 +73,6 @@ export default class Device extends EventEmitter {
 
 	async _attempt() {
 		const self = this;
-		
 
 		return new Promise((resolve, reject) => {
 			// Find the device
