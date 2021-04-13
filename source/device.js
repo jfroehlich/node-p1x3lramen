@@ -99,4 +99,4 @@ Device.pairedDevices = function () {
 			resolve(data);
 		});
 	});
-}
+};
