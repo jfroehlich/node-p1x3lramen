@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/jfroehlich/pixelramen#readme",
   "dependencies": {
-    "esm": "^3.2.25"
+    "esm": "^3.2.25",
+    "node-bluetooth-serial-port": "^2.2.7"
   }
 }
