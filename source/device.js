@@ -13,7 +13,7 @@ export default class Device extends EventEmitter {
 
 		this.config = Object.assign({}, DEFAULTS, settings);
 		this._connection = null;
-		this._port = new BluetoothSerialPort.BluetoothSerialPort();
+		this._port = Device.port;
 		this._port.on('data', buffer => {
 			console.log('from device:', buffer.toString('hex'));
 		});
@@ -29,7 +29,7 @@ export default class Device extends EventEmitter {
 			return;
 		}
 		
-		this.config.deviceMAC = !!adress !== false ? address : this.config.deviceMAC;
+		this.config.deviceMAC = !!address ? address : this.config.deviceMAC;
 		if (!!this.config.deviceMAC === false) {
 			throw new Error("No device MAC adress to connect to.");
 		}
@@ -70,6 +70,7 @@ export default class Device extends EventEmitter {
 		});
 	}
 
+
 	async _attempt() {
 		const self = this;
 		
@@ -91,3 +92,12 @@ export default class Device extends EventEmitter {
 	}
 }
 
+Device.port = new BluetoothSerialPort.BluetoothSerialPort();
+
+Device.pairedDevices = function () {
+	return new Promise((resolve, reject) => {
+		Device.port.listPairedDevices(data => {
+			resolve(data);
+		});
+	});
+}
