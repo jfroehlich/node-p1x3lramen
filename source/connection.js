@@ -70,7 +70,6 @@ export default class Connection extends EventEmitter {
 		});
 	}
 
-
 	async _attempt() {
 		const self = this;
 

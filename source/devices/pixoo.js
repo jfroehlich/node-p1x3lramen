@@ -14,9 +14,9 @@ export default class Pixoo {
 		const message = [
 			"4501",									// Prefix for light
 			this._colorHex(color),					// Color
-			this._percentHex(this._brightness),		// Brightness from 0-100
-			this._intHex(0),						// lightning type (?)
-			this._boolHex(true),					// power (?)
+			this._percentHex(this.config.brightness),		// Brightness from 0-100
+			this._intHex(0),						// lightning type
+			this._boolHex(true),					// power
 			"000000"								// Suffix
 		].join('');
 
@@ -24,6 +24,13 @@ export default class Pixoo {
 	}
 
 	// --- Internal methods ---
+
+	_intHex(int) {
+		if (int > 255 || int < 0) {
+			throw new Error('numberHex works only with number between 0 and 255');
+		}
+		return Math.round(int).toString(16).padStart(2, "0");
+	}
 
 	_intLittleHex(value) {
 		if (value > 65535 || value < 0) {

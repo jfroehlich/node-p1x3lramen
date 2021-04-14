@@ -1,9 +1,13 @@
 import Connection from './connection.js';
+import Pixoo from './devices/pixoo.js';
 
 const settings = {
-	device: {
+	connection: {
 		maxConnectAttempts: 3,
 		connectionAttemptDelay: 500
+	},
+	pixoo: {
+		brightness: 50
 	},
 	service: {
 		hostname: "localhost",
@@ -39,9 +43,18 @@ const settings = {
 
 	// This is the proof of concept for now. It should have the
 	// MAC address by now and connect to the device if it is paired.
-	console.log('Using Pixoo:', address);
-	const connection = new Connection(settings.device);
-	connection.connect(address);
+	const connection = new Connection(settings.connection);
+	const device = new Pixoo(settings.device);
+
+	console.log('Connecting to Pixoo:', address);
+	await connection.connect(address);
+	
+	console.log("Switching to green color...");
+	const message = device.customColor("00ff00");
+	for (const buffer of message) {
+		console.log('Sending:', buffer);
+		console.log('length:', await connection.write(buffer));
+	}
 
 	// Let's disconnect properly, shall we? Oh, there is some sh** going
 	// on with windows (as usual) let's handle that first.
