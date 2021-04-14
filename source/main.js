@@ -1,4 +1,4 @@
-import Device from './device.js';
+import Connection from './connection.js';
 
 const settings = {
 	device: {
@@ -28,7 +28,7 @@ const settings = {
 
 	if (address === null) {
 		// Attempt MAC auto detect
-		const devices = await Device.pairedDevices();
+		const devices = await Connection.pairedDevices();
 		for (let i = 0; i < devices.length; i++) {
 			if (devices[i].name === 'Pixoo') {
 				address = devices[i].address.replace('-', ':');
@@ -40,8 +40,8 @@ const settings = {
 	// This is the proof of concept for now. It should have the
 	// MAC address by now and connect to the device if it is paired.
 	console.log('Using Pixoo:', address);
-	const device = new Device(settings.device);
-	device.connect(address);
+	const connection = new Connection(settings.device);
+	connection.connect(address);
 
 	// Let's disconnect properly, shall we? Oh, there is some sh** going
 	// on with windows (as usual) let's handle that first.
@@ -59,7 +59,7 @@ const settings = {
 
 	// Let's disconnect properly from the device.
 	process.on('SIGINT', (code) => {
-		device.disconnect();
+		connection.disconnect();
 		process.exit();
 	});
 

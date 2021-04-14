@@ -7,13 +7,13 @@ const DEFAULTS = {
 	connectionAttemptDelay: 500
 };
 
-export default class Device extends EventEmitter {
+export default class Connection extends EventEmitter {
 	constructor(settings) {
 		super();
 
 		this.config = Object.assign({}, DEFAULTS, settings);
 		this._connection = null;
-		this._port = Device.port;
+		this._port = Connection.port;
 		this._port.on('data', buffer => {
 			console.log('from device:', buffer.toString('hex'));
 		});
@@ -25,7 +25,7 @@ export default class Device extends EventEmitter {
 
 	async connect(address) {
 		if (this.isConnected()) {
-			console.log("Device is already connected to", this.config.deviceMAC);
+			console.log("The connection is already established.", this.config.deviceMAC);
 			return;
 		}
 		
@@ -53,11 +53,11 @@ export default class Device extends EventEmitter {
 				await this._sleep(this.config.connectionAttemptDelay);
 			}
 		}
-		console.log('Giving up. :(')
+		console.log("Can't connect. Giving up :(");
 	}
 
 	async disconnect() {
-		console.log("disconnecting…");
+		console.log("Disconnecting…");
 		// FIXME Wrong? Needs to wait for an event before returning?
 		this._port.close();
 	}
@@ -91,11 +91,11 @@ export default class Device extends EventEmitter {
 	}
 }
 
-Device.port = new BluetoothSerialPort.BluetoothSerialPort();
+Connection.port = new BluetoothSerialPort.BluetoothSerialPort();
 
-Device.pairedDevices = function () {
+Connection.pairedDevices = function () {
 	return new Promise((resolve, reject) => {
-		Device.port.listPairedDevices(data => {
+		Connection.port.listPairedDevices(data => {
 			resolve(data);
 		});
 	});
