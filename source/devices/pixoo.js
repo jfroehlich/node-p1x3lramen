@@ -3,8 +3,9 @@ import { TinyColor } from '@ctrl/tinycolor';
 const DEFAULTS = {
 	brightness: 50,
 	color: 'ffffff',
-	lightningMode: 0, // 0 = Custom, 1 = love, 2 = plants, 3 = no mosquito, 4 = sleep
+	lightingMode: 0, // 0 = Custom, 1 = love, 2 = plants, 3 = no mosquito, 4 = sleep
 	clockMode: 0,
+	powerScreen: true,
 	showTime: true,
 	showWeather: true,
 	showTemperature: true,
@@ -72,50 +73,39 @@ export default class Pixoo {
 	}
 
 	// --- Lighting Mode --
+	
+	lighting(mode, color, brightness, powerScreen) {
+		this.config.mode = mode || this.config.mode;
+		this.config.color = color || this.config.color;
+		this.config.brightness = brightness || this.config.brightness;
+		this.config.powerScreen = powerScreen || this.config.powerScreen;
+
+		const message = [
+			"4501",										// Prefix for light
+			this._colorHex(this.config.color),			// Color
+			this._percentHex(this.config.brightness),	// Brightness from 0-100
+			this._intHex(this.config.lightingMode),		// lighting type
+			this._boolHex(this.config.powerScreen),		// power
+			"000000"									// suffix or functions?
+		].join('');
+		return this._binaryBuffer(this._compileMessage(message));
+	}
 
 	customColor(color) {
 		this.config.color = color;
-		this.config.lightningMode = 0; // Custom color mode
-
-		const message = [
-			"4501",										// Prefix for light
-			this._colorHex(this.config.color),			// Color
-			this._percentHex(this.config.brightness),	// Brightness from 0-100
-			this._intHex(this.config.lightningMode),	// lightning type
-			this._boolHex(true),						// power
-			"000000"									// Suffix
-		].join('');
-		return this._binaryBuffer(this._compileMessage(message));
+		this.config.lightingMode = 0;	// custom color mode
+		this.config.powerScreen = true;	// switch screen on
+		return this.lighting();
 	}
 
 	fancyLightning(mode) {
-		this.config.lightningMode = mode;
-
-		const message = [
-			"4501",										// Prefix for light
-			this._colorHex(this.config.color),			// Color
-			this._percentHex(this.config.brightness),	// Brightness from 0-100
-			this._intHex(this.config.lightningMode),	// lightning type
-			this._boolHex(true),						// power
-			"000000"									// Suffix
-		].join('');
-		return this._binaryBuffer(this._compileMessage(message));
+		this.config.lightingMode = mode;
+		return this.lighting();
 	}
 
 	powerScreen(status) {
-		if (typeof status !== 'boolean') {
-			throw new Error('The status needs to be a boolean value.');
-		}
-
-		const message = [
-			"4501",										// Prefix for light
-			this._colorHex(this.config.color),			// Color
-			this._percentHex(this.config.brightness),	// Brightness from 0-100
-			this._intHex(this.config.lightningMode),	// lightning mode
-			this._boolHex(status),						// power
-			"000000"									// Suffix
-		].join('');
-		return this._binaryBuffer(this._compileMessage(message));
+		this.config.powerScreen = status;
+		return this.lighting();
 	}
 
 	// --- Internal methods ---
