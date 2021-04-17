@@ -3,7 +3,12 @@ import { TinyColor } from '@ctrl/tinycolor';
 const DEFAULTS = {
 	brightness: 50,
 	color: 'ffffff',
-	lightningMode: 0 // 0 = Custom, 1 = love, 2 = plants, 3 = no mosquito, 4 = sleep
+	lightningMode: 0, // 0 = Custom, 1 = love, 2 = plants, 3 = no mosquito, 4 = sleep
+	clockMode: 0,
+	showTime: true,
+	showWeather: true,
+	showTemperature: true,
+	showCalendar: true
 };
 
 /**
@@ -13,8 +18,6 @@ export default class Pixoo {
 	constructor(settings) {
 		this.config = Object.assign({}, settings, DEFAULTS);
 	}
-
-	// --- Mode switching ---
 
 	// --- Base Commands ---
 	
@@ -46,11 +49,34 @@ export default class Pixoo {
 		return this._binaryBuffer(this._compileMessage(message));
 	}
 
-	// --- Lighting Modes --
+	// --- Clock Mode ---
+	
+	clock(mode, showTime, showWeather, showTemperature, showCalendar, color) {
+		this.config.clockMode = mode || this.config.clockMode;
+		this.config.showTime = showTime || this.config.showTime;;
+		this.config.showWeather = showWeather || this.config.showWeather;
+		this.config.showTemperature = showTemperature || this.config.showTemperature;
+		this.config.showCalendar = showCalendar || this.config.showCalendar;
+		this.config.color = color || this.config.color;
+
+		const message = [
+			"450001",									// Command Prefix
+			this._intHex(this.config.clockMode),
+			this._boolHex(this.config.showTime),
+			this._boolHex(this.config.showWeather),
+			this._boolHex(this.config.showTemperature),
+			this._boolHex(this.config.showCalendar),
+			this._colorHex(this.config.color)
+		].join('');
+		return this._binaryBuffer(this._compileMessage(message));
+	}
+
+	// --- Lighting Mode --
 
 	customColor(color) {
 		this.config.color = color;
 		this.config.lightningMode = 0; // Custom color mode
+
 		const message = [
 			"4501",										// Prefix for light
 			this._colorHex(this.config.color),			// Color
@@ -59,7 +85,6 @@ export default class Pixoo {
 			this._boolHex(true),						// power
 			"000000"									// Suffix
 		].join('');
-
 		return this._binaryBuffer(this._compileMessage(message));
 	}
 

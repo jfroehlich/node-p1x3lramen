@@ -74,6 +74,15 @@ const settings = {
 	
 	// start testing
 	
+	console.log("|| Switching to clock..");
+	message = device.clock();
+	for (let buffer of message) {
+		console.log('=>', buffer);
+		console.log('length:', await connection.write(buffer));
+	}
+
+	await connection._sleep(5000);
+	
 	console.log('Setting the time to 2006-09-18T12:34:00');
 	message = device.datetime(new Date('2006-09-18T12:34:00'));
 	for (let buffer of message) {
