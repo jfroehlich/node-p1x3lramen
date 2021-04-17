@@ -1,6 +1,13 @@
 import Connection from './connection.js';
 import Pixoo from './devices/pixoo.js';
 
+import {
+	testClockIntegration,
+	testLigtingIntegration,
+	testDateTimeIntegration,
+	testBrightnessIntegration
+} from './integration.js';
+
 const settings = {
 	connection: {
 		maxConnectAttempts: 3,
@@ -67,115 +74,24 @@ const settings = {
 	// MAC address by now and connect to the device if it is paired.
 	const connection = new Connection(settings.connection);
 	const device = new Pixoo(settings.device);
-	let message = "";
 
 	console.log('Connecting to Pixoo:', address);
 	await connection.connect(address);
-	
-	// start testing
-	
-	console.log("|| Switching to clock..");
-	message = device.clock();
-	for (let buffer of message) {
-		console.log('=>', buffer);
-		console.log('length:', await connection.write(buffer));
-	}
 
-	await connection._sleep(5000);
-	
-	console.log('Setting the time to 2006-09-18T12:34:00');
-	message = device.datetime(new Date('2006-09-18T12:34:00'));
-	for (let buffer of message) {
-		console.log('=>', buffer);
-		console.log('length:', await connection.write(buffer));
-	}
-	await connection._sleep(5000);
-	console.log('Setting the current time');
-	message = device.datetime(new Date());
-	for (let buffer of message) {
-		console.log('=>', buffer);
-		console.log('length:', await connection.write(buffer));
-	}
+	let message = null;
+	let testDelay = 500;
 
-	// switch through brightness
-	for (let i = 1; i <= 10; i++) {
-		console.log("|| Switching brightness to", i*10);
-		message = device.brightness(i*10);
-		for (let buffer of message) {
-			console.log('=>', buffer);
-			console.log('length:', await connection.write(buffer));
-		}
-		await connection._sleep(500);
-	}
-	console.log("|| Switching brightness to", 50);
-	message = device.brightness(50);
-	for (let buffer of message) {
-		console.log('=>', buffer);
-		console.log('length:', await connection.write(buffer));
-	}
-	
-	console.log("|| Switching to blue color...");
-	message = device.customColor("0000ff");
-	for (let buffer of message) {
-		console.log('=>', buffer);
-		console.log('length:', await connection.write(buffer));
-	}
+	// test the clock channel 
+	await testClockIntegration(device, connection, testDelay);
 
-	await connection._sleep(5000);
-	
-	console.log("|| Switching screen off...");
-	message = device.powerScreen(false);
-	for (let buffer of message) {
-		console.log('=>', buffer);
-		console.log('length:', await connection.write(buffer));
-	}
+	// test the lighting channel
+	await testLigtingIntegration(device, connection, testDelay);
 
-	await connection._sleep(5000);
+	// testing the date time 
+	await testDateTimeIntegration(device, connection, testDelay);
 
-	console.log("|| Switching screen on...");
-	message = device.powerScreen(true);
-	for (let buffer of message) {
-		console.log('=>', buffer);
-		console.log('length:', await connection.write(buffer));
-	}
+	await testBrightnessIntegration(device, connection, testDelay);
 
-	await connection._sleep(5000);
-
-	console.log("|| Love lightning...");
-	message = device.fancyLightning(1);
-	for (let buffer of message) {
-		console.log('=>', buffer);
-		console.log('length:', await connection.write(buffer));
-	}
-
-	await connection._sleep(5000);
-
-	console.log("|| plant lightning ...");
-	message = device.fancyLightning(2);
-	for (let buffer of message) {
-		console.log('=>', buffer);
-		console.log('length:', await connection.write(buffer));
-	}
-
-	await connection._sleep(5000);
-
-	console.log("|| no-mosquito lightning ...");
-	message = device.fancyLightning(3);
-	for (let buffer of message) {
-		console.log('=>', buffer);
-		console.log('length:', await connection.write(buffer));
-	}
-
-	await connection._sleep(5000);
-
-	console.log("|| no-mosquito lightning ...");
-	message = device.fancyLightning(3);
-	for (let buffer of message) {
-		console.log('=>', buffer);
-		console.log('length:', await connection.write(buffer));
-	}
-
-	await connection._sleep(5000);
 	connection.disconnect();
 	console.log('|| done.');
 	return;

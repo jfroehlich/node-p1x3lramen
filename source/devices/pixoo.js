@@ -1,20 +1,19 @@
 import { TinyColor } from '@ctrl/tinycolor';
 
 const DEFAULTS = {
-	brightness: 50,
-	color: 'ffffff',
-	lightingMode: 0, // 0 = Custom, 1 = love, 2 = plants, 3 = no mosquito, 4 = sleep
-	clockMode: 0,
-	powerScreen: true,
-	showTime: true,
-	showWeather: true,
-	showTemperature: true,
-	showCalendar: true
+	brightness: 50,				// integer values from 0-100
+	color: 'ffffff',			// currently only hex colors
+	weather: 0,					// weather modes: 1 clear, 3 cloudy sky, 5 thunderstorm, 6 rain, 8 snow, 9 fog
+	temperature: 0,				// temperature from -127 to 128
+	lightingMode: 0,			// Lighting modes: 0 = Custom, 1 = love, 2 = plants, 3 = no mosquito, 4 = sleep
+	clockMode: 0,				// Clock modes: 
+	powerScreen: true,			// switch screen on/off
+	showTime: true,				// show the time in clock channel 
+	showWeather: true,			// show weather in clock channel 
+	showTemperature: true,		// show temperature in clock channel 
+	showCalendar: true			// show calendar in clock channel 
 };
 
-/**
- *
- */
 export default class Pixoo {
 	constructor(settings) {
 		this.config = Object.assign({}, settings, DEFAULTS);
@@ -30,7 +29,6 @@ export default class Pixoo {
 		const message = [
 			"74",										// Prefix for light
 			this._percentHex(this.config.brightness)	// Brightness from 0-100
-			//this._intHex(this.config.lightningMode)		// lightning type
 		].join('');
 		return this._binaryBuffer(this._compileMessage(message));
 	}
@@ -46,6 +44,18 @@ export default class Pixoo {
 			this._intHex(date.getMinutes()),
 			this._intHex(date.getSeconds()),
 			"00"
+		].join('');
+		return this._binaryBuffer(this._compileMessage(message));
+	}
+
+	weathertemp(weather, temperature) {
+		this.config.weather = weather;
+		this.config.temperature = temperature;
+		
+		const message = [
+			"5F",										// prefix 
+			(this.config.temperature >= 0) ? this._intHex(this.config.temperature) : this._intHex(256 + this.config.temperature),
+			this._intHex(this.config.weather)
 		].join('');
 		return this._binaryBuffer(this._compileMessage(message));
 	}
