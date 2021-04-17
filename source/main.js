@@ -40,23 +40,8 @@ const settings = {
 			} 
 		}
 	}
-
-	// This is the proof of concept for now. It should have the
-	// MAC address by now and connect to the device if it is paired.
-	const connection = new Connection(settings.connection);
-	const device = new Pixoo(settings.device);
-
-	console.log('Connecting to Pixoo:', address);
-	await connection.connect(address);
 	
-	console.log("Switching to green color...");
-	const message = device.customColor("00ff00");
-	for (const buffer of message) {
-		console.log('Sending:', buffer);
-		console.log('length:', await connection.write(buffer));
-	}
-
-	// Let's disconnect properly, shall we? Oh, there is some sh** going
+	// Let's disconnect properly when the app is done, shall we? Oh, there is some sh** going
 	// on with windows (as usual) let's handle that first.
 	if (process.platform === "win32") {
 		let rl = require("readline").createInterface({
@@ -75,5 +60,79 @@ const settings = {
 		connection.disconnect();
 		process.exit();
 	});
+
+	// This is the proof of concept for now. It should have the
+	// MAC address by now and connect to the device if it is paired.
+	const connection = new Connection(settings.connection);
+	const device = new Pixoo(settings.device);
+
+	console.log('Connecting to Pixoo:', address);
+	await connection.connect(address);
+	
+	console.log("Switching to blue color...");
+	let message = device.customColor("0000ff");
+	for (let buffer of message) {
+		console.log('Sending:', buffer);
+		console.log('length:', await connection.write(buffer));
+	}
+
+	await connection._sleep(5000);
+	
+	console.log("|| Switching screen off...");
+	message = device.powerScreen(false);
+	for (let buffer of message) {
+		console.log('Sending:', buffer);
+		console.log('length:', await connection.write(buffer));
+	}
+
+	await connection._sleep(5000);
+
+	console.log("|| Switching screen on...");
+	message = device.powerScreen(true);
+	for (let buffer of message) {
+		console.log('=>', buffer);
+		console.log('length:', await connection.write(buffer));
+	}
+
+	await connection._sleep(5000);
+
+	console.log("|| Love lightning...");
+	message = device.fancyLightning(1);
+	for (let buffer of message) {
+		console.log('=>', buffer);
+		console.log('length:', await connection.write(buffer));
+	}
+
+	await connection._sleep(5000);
+
+	console.log("|| plant lightning ...");
+	message = device.fancyLightning(2);
+	for (let buffer of message) {
+		console.log('=>', buffer);
+		console.log('length:', await connection.write(buffer));
+	}
+
+	await connection._sleep(5000);
+
+	console.log("|| no-mosquito lightning ...");
+	message = device.fancyLightning(3);
+	for (let buffer of message) {
+		console.log('=>', buffer);
+		console.log('length:', await connection.write(buffer));
+	}
+
+	await connection._sleep(5000);
+
+	console.log("|| no-mosquito lightning ...");
+	message = device.fancyLightning(3);
+	for (let buffer of message) {
+		console.log('=>', buffer);
+		console.log('length:', await connection.write(buffer));
+	}
+
+	await connection._sleep(5000);
+	connection.disconnect();
+	console.log('|| done.');
+	return;
 
 })();

@@ -1,23 +1,58 @@
 import { TinyColor } from '@ctrl/tinycolor';
 
 const DEFAULTS = {
-	brightness: 50
+	brightness: 50,
+	color: 'ffffff',
+	lightningMode: 0 // 0 = Custom, 1 = love, 2 = plants, 3 = no mosquito, 4 = sleep
 };
-
 
 export default class Pixoo {
 	constructor(settings) {
 		this.config = Object.assign({}, settings, DEFAULTS);
 	}
 
+	// --- Lighting Modes --
+
 	customColor(color) {
+		this.config.color = color;
+		this.config.lightningMode = 0; // Custom color mode
 		const message = [
-			"4501",									// Prefix for light
-			this._colorHex(color),					// Color
-			this._percentHex(this.config.brightness),		// Brightness from 0-100
-			this._intHex(0),						// lightning type
-			this._boolHex(true),					// power
-			"000000"								// Suffix
+			"4501",										// Prefix for light
+			this._colorHex(this.config.color),			// Color
+			this._percentHex(this.config.brightness),	// Brightness from 0-100
+			this._intHex(this.config.lightningMode),	// lightning type
+			this._boolHex(true),						// power
+			"000000"									// Suffix
+		].join('');
+
+		return this._binaryBuffer(this._compileMessage(message));
+	}
+
+	fancyLightning(mode) {
+		this.config.lightningMode = mode;	
+		const message = [
+			"4501",										// Prefix for light
+			this._colorHex(this.config.color),			// Color
+			this._percentHex(this.config.brightness),	// Brightness from 0-100
+			this._intHex(this.config.lightningMode),	// lightning type
+			this._boolHex(true),						// power
+			"000000"									// Suffix
+		].join('');
+
+		return this._binaryBuffer(this._compileMessage(message));
+	}
+
+	powerScreen(status) {
+		if (typeof status !== 'boolean') {
+			throw new Error('The status needs to be a boolean value.');
+		}
+		const message = [
+			"4501",										// Prefix for light
+			this._colorHex(this.config.color),			// Color
+			this._percentHex(this.config.brightness),	// Brightness from 0-100
+			this._intHex(this.config.lightningMode),	// lightning mode
+			this._boolHex(status),						// power
+			"000000"									// Suffix
 		].join('');
 
 		return this._binaryBuffer(this._compileMessage(message));

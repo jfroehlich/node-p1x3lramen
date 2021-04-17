@@ -15,7 +15,7 @@ export default class Connection extends EventEmitter {
 		this._connection = null;
 		this._port = Connection.port;
 		this._port.on('data', buffer => {
-			console.log('from device:', buffer.toString('hex'));
+			console.log('<=', buffer.toString('hex'));
 		});
 	}
 
