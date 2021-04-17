@@ -6,9 +6,44 @@ const DEFAULTS = {
 	lightningMode: 0 // 0 = Custom, 1 = love, 2 = plants, 3 = no mosquito, 4 = sleep
 };
 
+/**
+ *
+ */
 export default class Pixoo {
 	constructor(settings) {
 		this.config = Object.assign({}, settings, DEFAULTS);
+	}
+
+	// --- Mode switching ---
+
+	// --- Base Commands ---
+	
+	brightness(level) {
+		level = level > 100 ? 100 : level;
+		level = level < 0 ? 0 : level;
+		this.config.brightness = level;
+
+		const message = [
+			"74",										// Prefix for light
+			this._percentHex(this.config.brightness)	// Brightness from 0-100
+			//this._intHex(this.config.lightningMode)		// lightning type
+		].join('');
+		return this._binaryBuffer(this._compileMessage(message));
+	}
+
+	datetime(date) {
+		const message = [
+			"18",										// Prefix for light
+			this._intHex(Number(date.getFullYear().toString().padStart(4, "0").slice(2))),
+			this._intHex(Number(date.getFullYear().toString().padStart(4, "0").slice(0, 2))),
+			this._intHex(date.getMonth() + 1),
+			this._intHex(date.getDate()),
+			this._intHex(date.getHours()),
+			this._intHex(date.getMinutes()),
+			this._intHex(date.getSeconds()),
+			"00"
+		].join('');
+		return this._binaryBuffer(this._compileMessage(message));
 	}
 
 	// --- Lighting Modes --
@@ -29,7 +64,8 @@ export default class Pixoo {
 	}
 
 	fancyLightning(mode) {
-		this.config.lightningMode = mode;	
+		this.config.lightningMode = mode;
+
 		const message = [
 			"4501",										// Prefix for light
 			this._colorHex(this.config.color),			// Color
@@ -38,7 +74,6 @@ export default class Pixoo {
 			this._boolHex(true),						// power
 			"000000"									// Suffix
 		].join('');
-
 		return this._binaryBuffer(this._compileMessage(message));
 	}
 
@@ -46,6 +81,7 @@ export default class Pixoo {
 		if (typeof status !== 'boolean') {
 			throw new Error('The status needs to be a boolean value.');
 		}
+
 		const message = [
 			"4501",										// Prefix for light
 			this._colorHex(this.config.color),			// Color
@@ -54,7 +90,6 @@ export default class Pixoo {
 			this._boolHex(status),						// power
 			"000000"									// Suffix
 		].join('');
-
 		return this._binaryBuffer(this._compileMessage(message));
 	}
 

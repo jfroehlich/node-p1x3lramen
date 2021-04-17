@@ -61,18 +61,54 @@ const settings = {
 		process.exit();
 	});
 
+	// -- testing things --
+
 	// This is the proof of concept for now. It should have the
 	// MAC address by now and connect to the device if it is paired.
 	const connection = new Connection(settings.connection);
 	const device = new Pixoo(settings.device);
+	let message = "";
 
 	console.log('Connecting to Pixoo:', address);
 	await connection.connect(address);
 	
-	console.log("Switching to blue color...");
-	let message = device.customColor("0000ff");
+	// start testing
+	
+	console.log('Setting the time to 2006-09-18T12:34:00');
+	message = device.datetime(new Date('2006-09-18T12:34:00'));
 	for (let buffer of message) {
-		console.log('Sending:', buffer);
+		console.log('=>', buffer);
+		console.log('length:', await connection.write(buffer));
+	}
+	await connection._sleep(5000);
+	console.log('Setting the current time');
+	message = device.datetime(new Date());
+	for (let buffer of message) {
+		console.log('=>', buffer);
+		console.log('length:', await connection.write(buffer));
+	}
+
+	// switch through brightness
+	for (let i = 1; i <= 10; i++) {
+		console.log("|| Switching brightness to", i*10);
+		message = device.brightness(i*10);
+		for (let buffer of message) {
+			console.log('=>', buffer);
+			console.log('length:', await connection.write(buffer));
+		}
+		await connection._sleep(500);
+	}
+	console.log("|| Switching brightness to", 50);
+	message = device.brightness(50);
+	for (let buffer of message) {
+		console.log('=>', buffer);
+		console.log('length:', await connection.write(buffer));
+	}
+	
+	console.log("|| Switching to blue color...");
+	message = device.customColor("0000ff");
+	for (let buffer of message) {
+		console.log('=>', buffer);
 		console.log('length:', await connection.write(buffer));
 	}
 
@@ -81,7 +117,7 @@ const settings = {
 	console.log("|| Switching screen off...");
 	message = device.powerScreen(false);
 	for (let buffer of message) {
-		console.log('Sending:', buffer);
+		console.log('=>', buffer);
 		console.log('length:', await connection.write(buffer));
 	}
 
