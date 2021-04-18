@@ -70,6 +70,15 @@ export default class Connection extends EventEmitter {
 		});
 	}
 
+	async writeAll(buffers) {
+		// TODO Add an optional delay after each push
+		const status = [];
+		for (let buffer of buffers) {
+			status.push(await this.write(buffer));
+		}
+		return status;
+	}
+
 	async _attempt() {
 		const self = this;
 
