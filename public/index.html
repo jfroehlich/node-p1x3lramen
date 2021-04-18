@@ -14,6 +14,10 @@
 				<label for="brightness">Brightness</label>
 				<input name="brightness" type="range" min="0" max="100" step="1"/>
 			</p>
+			<p class="field">
+				<label for="color">Color</label>
+				<input name="color" type="color" value="#ffffff"/>
+			</p>
 		</section>
 
 	</main>
@@ -21,6 +25,14 @@
 	<script type="text/javascript">
 		document.querySelectorAll('input[name="brightness"]')[0].addEventListener('change', function (event) { 
 			fetch("http://localhost:8000/api/brightness?level=" + event.target.value, {method: "GET" })
+				.then(response => response.json())
+				.then(result => {
+					console.log("Success:", result, "brightness:", result.config.brightness);
+				});
+		})
+		document.querySelectorAll('input[name="color"]')[0].addEventListener('input', function (event) { 
+			console.log("color:", event.target.value);
+			fetch("http://localhost:8000/api/lighting?mode=0&color=" + event.target.value.substring(1), {method: "GET" })
 				.then(response => response.json())
 				.then(result => {
 					console.log("Success:", result, "brightness:", result.config.brightness);

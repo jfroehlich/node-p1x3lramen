@@ -46,7 +46,7 @@ export default class Service {
 		this.app.get("/api/disconnect", this._disconnect.bind(this));
 
 		this.app.get("/api/brightness", this._brightness.bind(this));
-		//this.app.get("/api/", this..bind(this));
+		this.app.get("/api/lighting", this._lighting.bind(this));
 		//this.app.get("/api/", this..bind(this));
 		//this.app.get("/api/", this..bind(this));
 		//this.app.get("/api/", this..bind(this));
@@ -118,8 +118,24 @@ export default class Service {
 
 	// --- channel commands ---
 	
-	async lighting(req, res) {
+	async _lighting(req, res) {
+		const settings = {}; 	
+		if (req.query.color) {
+			settings.color = req.query.color;
+		}
+		if (req.query.brightness && parseInt(req.query.brightness, 10)) {
+			settings.brightness = parseInt(req.query.brightness, 10);
+		}
+		if (req.query.mode && parseInt(req.query.mode, 10)) {
+			settings.mode = parseInt(req.query.mode, 10);
+		}
+		if (typeof req.query.powerScreen === 'string') {
+			settings.powerScreen = req.query.powerScreen === 'true' ? true : false;
+		}
 
+		const msg = this.device.lighting(settings); 
+		this.connection.writeAll(msg);
+		
 		return this._status(req, res);
 	}
 
