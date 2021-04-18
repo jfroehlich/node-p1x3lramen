@@ -47,7 +47,7 @@ export default class Service {
 
 		this.app.get("/api/brightness", this._brightness.bind(this));
 		this.app.get("/api/lighting", this._lighting.bind(this));
-		//this.app.get("/api/", this..bind(this));
+		this.app.get("/api/clock", this._clock.bind(this));
 		//this.app.get("/api/", this..bind(this));
 		//this.app.get("/api/", this..bind(this));
 
@@ -112,6 +112,14 @@ export default class Service {
 	}
 
 	async _climate(req, res) {
+		if (req.query.weather && parseInt(req.query.weather, 10)) {
+			settings.weather = parseInt(req.query.weather, 10);
+		}
+		if (req.query.temperature && parseInt(req.query.temperature, 10)) {
+			settings.temperature = parseInt(req.query.temperature, 10);
+		}
+		const msg = this.device.climate(settings); 
+		this.connection.writeAll(msg);
 
 		return this._status(req, res);
 	}
@@ -119,15 +127,15 @@ export default class Service {
 	// --- channel commands ---
 	
 	async _lighting(req, res) {
-		const settings = {}; 	
+		const settings = {};
 		if (req.query.color) {
 			settings.color = req.query.color;
 		}
 		if (req.query.brightness && parseInt(req.query.brightness, 10)) {
 			settings.brightness = parseInt(req.query.brightness, 10);
 		}
-		if (req.query.mode && parseInt(req.query.mode, 10)) {
-			settings.mode = parseInt(req.query.mode, 10);
+		if (req.query.lightingMode && parseInt(req.query.lightingMode, 10)) {
+			settings.lightingMode = parseInt(req.query.lightingMode, 10);
 		}
 		if (typeof req.query.powerScreen === 'string') {
 			settings.powerScreen = req.query.powerScreen === 'true' ? true : false;
@@ -139,7 +147,26 @@ export default class Service {
 		return this._status(req, res);
 	}
 
-	async clock(req, res) {
+	async _clock(req, res) {
+		const settings = {};
+
+		if (req.query.clockMode && parseInt(req.query.clockMode, 10)) {
+			settings.clockMode = parseInt(req.query.clockMode, 10);
+		}
+		if (typeof req.query.showTime === 'string') {
+			settings.showTime = req.query.showTime === 'true' ? true : false;
+		}
+		if (typeof req.query.showWeather === 'string') {
+			settings.showWeather = req.query.showWeather === 'true' ? true : false;
+		}
+		if (typeof req.query.showTemperature === 'string') {
+			settings.showTemperature = req.query.showTemperature === 'true' ? true : false;
+		}
+		if (typeof req.query.showCalendar === 'string') {
+			settings.showTemperature = req.query.showCalendar === 'true' ? true : false;
+		}
+		const msg = this.device.clock(settings); 
+		this.connection.writeAll(msg);
 
 		return this._status(req, res);
 	}

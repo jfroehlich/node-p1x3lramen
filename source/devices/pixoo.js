@@ -92,7 +92,7 @@ export default class Pixoo {
 	
 	lighting(settings) {
 		settings = settings || {};
-		this.config.mode = settings.mode || this.config.mode;
+		this.config.lightingMode = settings.lightingMode || this.config.lightingMode;
 		this.config.color = settings.color || this.config.color;
 		this.config.brightness = settings.brightness || this.config.brightness;
 		this.config.powerScreen = settings.powerScreen || this.config.powerScreen;
