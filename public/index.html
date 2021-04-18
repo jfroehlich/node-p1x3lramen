@@ -1,0 +1,31 @@
+<!doctype html>
+<html>
+<head>
+	<title>Pixelramen</title>
+</head>
+<body>
+	<header></header>
+	<main>
+		<h1>Pixelramen</h1>
+
+		<section>
+			<h2>Basic commands</h2>
+			<p class="field">
+				<label for="brightness">Brightness</label>
+				<input name="brightness" type="range" min="0" max="100" step="1"/>
+			</p>
+		</section>
+
+	</main>
+	<footer></footer>
+	<script type="text/javascript">
+		document.querySelectorAll('input[name="brightness"]')[0].addEventListener('change', function (event) { 
+			fetch("http://localhost:8000/api/brightness?level=" + event.target.value, {method: "GET" })
+				.then(response => response.json())
+				.then(result => {
+					console.log("Success:", result, "brightness:", result.config.brightness);
+				});
+		})
+	</script>
+</body>
+</html>

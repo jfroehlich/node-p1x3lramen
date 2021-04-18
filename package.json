@@ -25,6 +25,7 @@
   "dependencies": {
     "@ctrl/tinycolor": "^3.4.0",
     "esm": "^3.2.25",
+    "express": "^4.17.1",
     "node-bluetooth-serial-port": "^2.2.7"
   }
 }

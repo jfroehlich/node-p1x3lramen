@@ -29,7 +29,7 @@ export default class Connection extends EventEmitter {
 			return;
 		}
 		
-		this.config.deviceMAC = !!address ? address : this.config.deviceMAC;
+		this.config.deviceMAC = address || this.config.deviceMAC;
 		if (!!this.config.deviceMAC === false) {
 			throw new Error("No device MAC adress to connect to.");
 		}

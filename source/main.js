@@ -1,4 +1,5 @@
 import Connection from './connection.js';
+import Service from './service.js';
 import Pixoo from './devices/pixoo.js';
 
 import {
@@ -11,6 +12,7 @@ import {
 
 const settings = {
 	connection: {
+		deviceMAC: '',
 		maxConnectAttempts: 3,
 		connectionAttemptDelay: 500
 	},
@@ -19,7 +21,8 @@ const settings = {
 	},
 	service: {
 		hostname: "localhost",
-		port: "8000"
+		port: "8000",
+		autoConnect: true
 	}
 };
 
@@ -48,6 +51,13 @@ const settings = {
 			} 
 		}
 	}
+
+	if (address === null) {
+		console.log("node index.js <DEVICEMAC>")
+		console.log("Can't list paired devices.");
+		return;
+	}
+	settings.connection.deviceMAC = address;
 	
 	// Let's disconnect properly when the app is done, shall we? Oh, there is some sh** going
 	// on with windows (as usual) let's handle that first.
@@ -65,6 +75,7 @@ const settings = {
 
 	// Let's disconnect properly from the device.
 	process.on('SIGINT', (code) => {
+		service.stop();
 		connection.disconnect();
 		process.exit();
 	});
@@ -75,29 +86,9 @@ const settings = {
 	// MAC address by now and connect to the device if it is paired.
 	const connection = new Connection(settings.connection);
 	const device = new Pixoo(settings.device);
+	const service = new Service(settings.service);
 
-	console.log('Connecting to Pixoo:', address);
-	await connection.connect(address);
-
-	let message = null;
-	let testDelay = 5000;
-
-	// testing the date time 
-	await testDateTimeIntegration(device, connection, testDelay);
-
-	// testing the brightness changes
-	await testBrightnessIntegration(device, connection, testDelay);
-	
-	// test the clock channel 
-	await testClockIntegration(device, connection, testDelay);
-
-	// test the lighting channel
-	await testLigtingIntegration(device, connection, testDelay);
-
-	await testClimateIntegration(device, connection, testDelay);
-
-	connection.disconnect();
-	console.log('|| done.');
-	return;
-
+	//console.log('Connecting to Pixoo:', address);
+	//await connection.connect(address);
+	service.start(connection, device);
 })();
