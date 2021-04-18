@@ -43,6 +43,57 @@ export async function testClockIntegration(device, connection, delay) {
 
 	await connection._sleep(delay);
 	
+	console.log("[TEST] rainbow");
+	message = device.clock(1, true, false, false, false, 'ff0000');
+	for (let buffer of message) {
+		console.log('=>', buffer);
+		console.log('length:', await connection.write(buffer));
+	}
+
+	await connection._sleep(delay);
+
+	console.log("[TEST] rainbow");
+	message = device.clock(2, true, false, false, false, 'ff0000');
+	for (let buffer of message) {
+		console.log('=>', buffer);
+		console.log('length:', await connection.write(buffer));
+	}
+
+	console.log("[TEST] analog square");
+	message = device.clock(3, true, false, false, false, 'ff0000');
+	for (let buffer of message) {
+		console.log('=>', buffer);
+		console.log('length:', await connection.write(buffer));
+	}
+
+	await connection._sleep(delay);
+
+	console.log("[TEST] fullscreen negative");
+	message = device.clock(4, true, false, false, false, 'ff0000');
+	for (let buffer of message) {
+		console.log('=>', buffer);
+		console.log('length:', await connection.write(buffer));
+	}
+
+	await connection._sleep(delay);
+
+	console.log("[TEST] analog round");
+	message = device.clock(5, true, false, false, false, 'ff0000');
+	for (let buffer of message) {
+		console.log('=>', buffer);
+		console.log('length:', await connection.write(buffer));
+	}
+
+	await connection._sleep(delay);
+
+	console.log("[TEST] widescreen");
+	message = device.clock(6, true, false, false, false, 'ff0000');
+	for (let buffer of message) {
+		console.log('=>', buffer);
+		console.log('length:', await connection.write(buffer));
+	}
+
+	await connection._sleep(delay);
 }
 
 export async function testLigtingIntegration(device, connection, delay) {

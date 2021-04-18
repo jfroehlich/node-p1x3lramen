@@ -6,7 +6,7 @@ const DEFAULTS = {
 	weather: 0,					// weather modes: 1 clear, 3 cloudy sky, 5 thunderstorm, 6 rain, 8 snow, 9 fog
 	temperature: 0,				// temperature from -127 to 128
 	lightingMode: 0,			// Lighting modes: 0 = Custom, 1 = love, 2 = plants, 3 = no mosquito, 4 = sleep
-	clockMode: 0,				// Clock modes: 
+	clockMode: 0,				// Clock modes: 0 fullscreen, 1 rainbow, 2 boxed, 3 analog square, 4 fullscreen negative, 5 analog round, 6 widescreen 
 	powerScreen: true,			// switch screen on/off
 	showTime: true,				// show the time in clock channel 
 	showWeather: true,			// show weather in clock channel 
@@ -117,6 +117,12 @@ export default class Pixoo {
 		this.config.powerScreen = status;
 		return this.lighting();
 	}
+
+	// --- Visualization channel ---
+	
+	// --- Cloud channel ---
+	
+	// --- Custom channel ---
 
 	// --- Internal methods ---
 
