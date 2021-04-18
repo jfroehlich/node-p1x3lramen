@@ -9,6 +9,7 @@ export async function testClockIntegration(device, connection, delay) {
 
 	console.log("[TEST] Switching to clock..");
 	message = device.clock();
+	console.log(message)
 	for (let buffer of message) {
 		console.log('=>', buffer);
 		console.log('length:', await connection.write(buffer));
@@ -100,7 +101,7 @@ export async function testLigtingIntegration(device, connection, delay) {
 	let message = null;
 
 	console.log("[TEST] Switching to blue color...");
-	message = device.customColor("0000ff");
+	message = device.lighting({mode: 0, color: '0000ff', powerScreen: true});
 	for (let buffer of message) {
 		console.log('=>', buffer);
 		console.log('length:', await connection.write(buffer));
@@ -109,7 +110,7 @@ export async function testLigtingIntegration(device, connection, delay) {
 	await connection._sleep(delay);
 	
 	console.log("[TEST] Switching screen off...");
-	message = device.powerScreen(false);
+	message = device.lighting({powerScreen: false});
 	for (let buffer of message) {
 		console.log('=>', buffer);
 		console.log('length:', await connection.write(buffer));
@@ -118,7 +119,7 @@ export async function testLigtingIntegration(device, connection, delay) {
 	await connection._sleep(delay);
 
 	console.log("[TEST] Switching screen on...");
-	message = device.powerScreen(true);
+	message = device.lighting({powerScreen: true});
 	for (let buffer of message) {
 		console.log('=>', buffer);
 		console.log('length:', await connection.write(buffer));
@@ -127,7 +128,7 @@ export async function testLigtingIntegration(device, connection, delay) {
 	await connection._sleep(delay);
 
 	console.log("[TEST] Love lightning...");
-	message = device.fancyLightning(1);
+	message = device.lighting({mode: 1});
 	for (let buffer of message) {
 		console.log('=>', buffer);
 		console.log('length:', await connection.write(buffer));
@@ -136,7 +137,7 @@ export async function testLigtingIntegration(device, connection, delay) {
 	await connection._sleep(delay);
 
 	console.log("[TEST] Plant lightning ...");
-	message = device.fancyLightning(2);
+	message = device.lighting({mode: 2});
 	for (let buffer of message) {
 		console.log('=>', buffer);
 		console.log('length:', await connection.write(buffer));
@@ -145,7 +146,16 @@ export async function testLigtingIntegration(device, connection, delay) {
 	await connection._sleep(delay);
 
 	console.log("[TEST] no-mosquito lightning ...");
-	message = device.fancyLightning(3);
+	message = device.lighting({mode: 3});
+	for (let buffer of message) {
+		console.log('=>', buffer);
+		console.log('length:', await connection.write(buffer));
+	}
+
+	await connection._sleep(delay);
+
+	console.log("[TEST] sleep lightning ...");
+	message = device.lighting({mode: 4});
 	for (let buffer of message) {
 		console.log('=>', buffer);
 		console.log('length:', await connection.write(buffer));
@@ -160,7 +170,7 @@ export async function testBrightnessIntegration(device, connection, delay) {
 	let message = null;
 
 	console.log("[PREP] Switching to white color...");
-	message = device.customColor("ffffff");
+	message = device.lighting({color: 'ffffff', brightness: 0});
 	for (let buffer of message) {
 		console.log('=>', buffer);
 		console.log('length:', await connection.write(buffer));
@@ -169,7 +179,7 @@ export async function testBrightnessIntegration(device, connection, delay) {
 	// switch through brightness
 	for (let i = 1; i <= 10; i++) {
 		console.log("[TEST] Switching brightness to", i*10);
-		message = device.brightness(i*10);
+		message = device.brightness({level: i*10});
 		for (let buffer of message) {
 			console.log('=>', buffer);
 			console.log('length:', await connection.write(buffer));
@@ -177,7 +187,7 @@ export async function testBrightnessIntegration(device, connection, delay) {
 		await connection._sleep(delay);
 	}
 	console.log("[RESET] Switching brightness to", 50);
-	message = device.brightness(50);
+	message = device.brightness({level: 50});
 	for (let buffer of message) {
 		console.log('=>', buffer);
 		console.log('length:', await connection.write(buffer));
@@ -197,7 +207,7 @@ export async function testDateTimeIntegration(device, connection, delay) {
 	}
 
 	console.log('[PREP] Setting the current time');
-	message = device.datetime(new Date());
+	message = device.datetime();
 	for (let buffer of message) {
 		console.log('=>', buffer);
 		console.log('length:', await connection.write(buffer));
@@ -206,7 +216,7 @@ export async function testDateTimeIntegration(device, connection, delay) {
 	await connection._sleep(delay);
 
 	console.log('[TEST] Setting the time to 2006-09-18T12:34:00');
-	message = device.datetime(new Date('2006-09-18T12:34:00'));
+	message = device.datetime({date: new Date('2006-09-18T12:34:00')});
 	for (let buffer of message) {
 		console.log('=>', buffer);
 		console.log('length:', await connection.write(buffer));

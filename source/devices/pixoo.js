@@ -90,38 +90,22 @@ export default class Pixoo {
 
 	// --- Lighting Mode --
 	
-	lighting(mode, color, brightness, powerScreen) {
-		this.config.mode = mode || this.config.mode;
-		this.config.color = color || this.config.color;
-		this.config.brightness = brightness || this.config.brightness;
-		this.config.powerScreen = powerScreen || this.config.powerScreen;
+	lighting(settings) {
+		settings = settings || {};
+		this.config.mode = settings.mode || this.config.mode;
+		this.config.color = settings.color || this.config.color;
+		this.config.brightness = settings.brightness || this.config.brightness;
+		this.config.powerScreen = settings.powerScreen || this.config.powerScreen;
 
 		const message = [
 			"4501",										// Prefix for light
 			this._colorHex(this.config.color),			// Color
 			this._percentHex(this.config.brightness),	// Brightness from 0-100
-			this._intHex(this.config.lightingMode),		// lighting type
+			this._intHex(this.config.lightingMode),		// lighting mode
 			this._boolHex(this.config.powerScreen),		// power
 			"000000"									// suffix or functions?
 		].join('');
 		return this._binaryBuffer(this._compileMessage(message));
-	}
-
-	customColor(color) {
-		this.config.color = color;
-		this.config.lightingMode = 0;	// custom color mode
-		this.config.powerScreen = true;	// switch screen on
-		return this.lighting();
-	}
-
-	fancyLightning(mode) {
-		this.config.lightingMode = mode;
-		return this.lighting();
-	}
-
-	powerScreen(status) {
-		this.config.powerScreen = status;
-		return this.lighting();
 	}
 
 	// --- Visualization channel ---
