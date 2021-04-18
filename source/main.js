@@ -5,7 +5,7 @@ import {
 	testClockIntegration,
 	testLigtingIntegration,
 	testDateTimeIntegration,
-	testWeatherAndTemperatureIntegration,
+	testClimateIntegration,
 	testBrightnessIntegration
 } from './integration.js';
 
@@ -83,19 +83,18 @@ const settings = {
 	let testDelay = 5000;
 
 	// testing the date time 
-	await testDateTimeIntegration(device, connection, testDelay);
+	//await testDateTimeIntegration(device, connection, testDelay);
 
 	// testing the brightness changes
-	await testBrightnessIntegration(device, connection, testDelay);
+	//await testBrightnessIntegration(device, connection, testDelay);
 	
 	// test the clock channel 
-	await testClockIntegration(device, connection, testDelay);
-
+	//await testClockIntegration(device, connection, testDelay);
 
 	// test the lighting channel
-	await testLigtingIntegration(device, connection, testDelay);
+	//await testLigtingIntegration(device, connection, testDelay);
 
-	await testWeatherAndTemperatureIntegration(device, connection, testDelay);
+	await testClimateIntegration(device, connection, testDelay);
 
 	connection.disconnect();
 	console.log('|| done.');

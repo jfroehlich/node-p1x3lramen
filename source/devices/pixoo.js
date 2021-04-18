@@ -21,7 +21,9 @@ export default class Pixoo {
 
 	// --- Base Commands ---
 	
-	brightness(level) {
+	brightness(settings) {
+		settings = settings || {};
+		let level = settings.level || this.config.brightness;
 		level = level > 100 ? 100 : level;
 		level = level < 0 ? 0 : level;
 		this.config.brightness = level;
@@ -33,7 +35,9 @@ export default class Pixoo {
 		return this._binaryBuffer(this._compileMessage(message));
 	}
 
-	datetime(date) {
+	datetime(settings) {
+		settings = settings || {};
+		let date = settings.date || new Date();
 		const message = [
 			"18",										// Prefix for light
 			this._intHex(Number(date.getFullYear().toString().padStart(4, "0").slice(2))),
@@ -48,9 +52,10 @@ export default class Pixoo {
 		return this._binaryBuffer(this._compileMessage(message));
 	}
 
-	weathertemp(weather, temperature) {
-		this.config.weather = weather;
-		this.config.temperature = temperature;
+	climate(settings) {
+		settings = settings || {};
+		this.config.weather = settings.weather || this.config.weather;
+		this.config.temperature = settings.temperature || this.config.temperature;
 		
 		const message = [
 			"5F",										// prefix 
@@ -62,13 +67,14 @@ export default class Pixoo {
 
 	// --- Clock Mode ---
 	
-	clock(mode, showTime, showWeather, showTemperature, showCalendar, color) {
-		this.config.clockMode = mode || this.config.clockMode;
-		this.config.showTime = showTime || this.config.showTime;;
-		this.config.showWeather = showWeather || this.config.showWeather;
-		this.config.showTemperature = showTemperature || this.config.showTemperature;
-		this.config.showCalendar = showCalendar || this.config.showCalendar;
-		this.config.color = color || this.config.color;
+	clock(settings) {
+		settings = settings || {};
+		this.config.clockMode = settings.mode || this.config.clockMode;
+		this.config.showTime = settings.showTime || this.config.showTime;;
+		this.config.showWeather = settings.showWeather || this.config.showWeather;
+		this.config.showTemperature = settings.showTemperature || this.config.showTemperature;
+		this.config.showCalendar = settings.showCalendar || this.config.showCalendar;
+		this.config.color = settings.color || this.config.color;
 
 		const message = [
 			"450001",									// Command Prefix

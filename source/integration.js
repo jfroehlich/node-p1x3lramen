@@ -17,7 +17,7 @@ export async function testClockIntegration(device, connection, delay) {
 	await connection._sleep(delay);
 
 	console.log("[TEST] Show weather only.");
-	message = device.clock(0, false, true, false, false, 'ffffff');
+	message = device.clock({mode: 0, showTime: false, showWeather: true, showTemperature: false, showCalendar: false, color: 'ffffff'});
 	for (let buffer of message) {
 		console.log('=>', buffer);
 		console.log('length:', await connection.write(buffer));
@@ -26,7 +26,7 @@ export async function testClockIntegration(device, connection, delay) {
 	await connection._sleep(delay);
 
 	console.log("[TEST] Show temperature only.");
-	message = device.clock(0, false, false, true, false, 'ffffff');
+	message = device.clock({mode: 0, showTime: false, showWeather: false, showTemperature: true, showCalendar: false, color: 'ffffff'});
 	for (let buffer of message) {
 		console.log('=>', buffer);
 		console.log('length:', await connection.write(buffer));
@@ -35,7 +35,7 @@ export async function testClockIntegration(device, connection, delay) {
 	await connection._sleep(delay);
 
 	console.log("[TEST] Show calendar only.");
-	message = device.clock(0, false, false, false, true, 'ffffff');
+	message = device.clock({mode: 0, showTime: false, showWeather: false, showTemperature: false, showCalendar: true, color: 'ffffff'});
 	for (let buffer of message) {
 		console.log('=>', buffer);
 		console.log('length:', await connection.write(buffer));
@@ -44,7 +44,7 @@ export async function testClockIntegration(device, connection, delay) {
 	await connection._sleep(delay);
 	
 	console.log("[TEST] rainbow");
-	message = device.clock(1, true, false, false, false, 'ff0000');
+	message = device.clock({mode: 1, showTime: true, showWeather: false, showTemperature: false, showCalendar: false, color: 'ffffff'});
 	for (let buffer of message) {
 		console.log('=>', buffer);
 		console.log('length:', await connection.write(buffer));
@@ -53,14 +53,14 @@ export async function testClockIntegration(device, connection, delay) {
 	await connection._sleep(delay);
 
 	console.log("[TEST] rainbow");
-	message = device.clock(2, true, false, false, false, 'ff0000');
+	message = device.clock({mode: 2, showTime: true, showWeather: false, showTemperature: false, showCalendar: false, color: 'ffffff'});
 	for (let buffer of message) {
 		console.log('=>', buffer);
 		console.log('length:', await connection.write(buffer));
 	}
 
 	console.log("[TEST] analog square");
-	message = device.clock(3, true, false, false, false, 'ff0000');
+	message = device.clock({mode: 3, showTime: true, showWeather: false, showTemperature: false, showCalendar: false, color: 'ffffff'});
 	for (let buffer of message) {
 		console.log('=>', buffer);
 		console.log('length:', await connection.write(buffer));
@@ -69,7 +69,7 @@ export async function testClockIntegration(device, connection, delay) {
 	await connection._sleep(delay);
 
 	console.log("[TEST] fullscreen negative");
-	message = device.clock(4, true, false, false, false, 'ff0000');
+	message = device.clock({mode: 4, showTime: true, showWeather: false, showTemperature: false, showCalendar: false, color: 'ffffff'});
 	for (let buffer of message) {
 		console.log('=>', buffer);
 		console.log('length:', await connection.write(buffer));
@@ -78,7 +78,7 @@ export async function testClockIntegration(device, connection, delay) {
 	await connection._sleep(delay);
 
 	console.log("[TEST] analog round");
-	message = device.clock(5, true, false, false, false, 'ff0000');
+	message = device.clock({mode: 5, showTime: true, showWeather: false, showTemperature: false, showCalendar: false, color: 'ffffff'});
 	for (let buffer of message) {
 		console.log('=>', buffer);
 		console.log('length:', await connection.write(buffer));
@@ -87,7 +87,7 @@ export async function testClockIntegration(device, connection, delay) {
 	await connection._sleep(delay);
 
 	console.log("[TEST] widescreen");
-	message = device.clock(6, true, false, false, false, 'ff0000');
+	message = device.clock({mode: 6, showTime: true, showWeather: false, showTemperature: false, showCalendar: false, color: 'ffffff'});
 	for (let buffer of message) {
 		console.log('=>', buffer);
 		console.log('length:', await connection.write(buffer));
@@ -224,11 +224,11 @@ export async function testDateTimeIntegration(device, connection, delay) {
 	await connection._sleep(delay);
 }
 
-export async function testWeatherAndTemperatureIntegration(device, connection, delay) {
+export async function testClimateIntegration(device, connection, delay) {
 	let message = null;
 
 	console.log("[PREP] Switching to clock..");
-	message = device.clock(0, false, true, true, false, 'ffffff');
+	message = device.clock({mode: 0, showTime: true, showWeather: true, showTemperature: true, showCalendar: false, color: 'ffffff'});
 	for (let buffer of message) {
 		console.log('=>', buffer);
 		console.log('length:', await connection.write(buffer));
@@ -237,7 +237,7 @@ export async function testWeatherAndTemperatureIntegration(device, connection, d
 	await connection._sleep(delay);
 	
 	console.log("[TEST] cloudy, 0 degrees");
-	message = device.weathertemp(1, 0);
+	message = device.climate({weather: 1, temperature: 0});
 	for (let buffer of message) {
 		console.log('=>', buffer);
 		console.log('length:', await connection.write(buffer));
