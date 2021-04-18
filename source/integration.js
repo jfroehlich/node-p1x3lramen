@@ -16,7 +16,32 @@ export async function testClockIntegration(device, connection, delay) {
 
 	await connection._sleep(delay);
 
-	// TODO Test clock features.
+	console.log("[TEST] Show weather only.");
+	message = device.clock(0, false, true, false, false, 'ffffff');
+	for (let buffer of message) {
+		console.log('=>', buffer);
+		console.log('length:', await connection.write(buffer));
+	}
+
+	await connection._sleep(delay);
+
+	console.log("[TEST] Show temperature only.");
+	message = device.clock(0, false, false, true, false, 'ffffff');
+	for (let buffer of message) {
+		console.log('=>', buffer);
+		console.log('length:', await connection.write(buffer));
+	}
+
+	await connection._sleep(delay);
+
+	console.log("[TEST] Show calendar only.");
+	message = device.clock(0, false, false, false, true, 'ffffff');
+	for (let buffer of message) {
+		console.log('=>', buffer);
+		console.log('length:', await connection.write(buffer));
+	}
+
+	await connection._sleep(delay);
 	
 }
 
@@ -140,6 +165,28 @@ export async function testDateTimeIntegration(device, connection, delay) {
 
 	console.log('[TEST] Setting the current time');
 	message = device.datetime(new Date());
+	for (let buffer of message) {
+		console.log('=>', buffer);
+		console.log('length:', await connection.write(buffer));
+	}
+
+	await connection._sleep(delay);
+}
+
+export async function testWeatherAndTemperatureIntegration(device, connection, delay) {
+	let message = null;
+
+	console.log("[PREP] Switching to clock..");
+	message = device.clock(0, false, true, true, false, 'ffffff');
+	for (let buffer of message) {
+		console.log('=>', buffer);
+		console.log('length:', await connection.write(buffer));
+	}
+
+	await connection._sleep(delay);
+	
+	console.log("[TEST] cloudy, 0 degrees");
+	message = device.weathertemp(1, 0);
 	for (let buffer of message) {
 		console.log('=>', buffer);
 		console.log('length:', await connection.write(buffer));
