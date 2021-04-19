@@ -11,7 +11,9 @@ const DEFAULTS = {
 	showTime: true,				// show the time in clock channel 
 	showWeather: true,			// show weather in clock channel 
 	showTemperature: true,		// show temperature in clock channel 
-	showCalendar: true			// show calendar in clock channel 
+	showCalendar: true,			// show calendar in clock channel 
+	redScore: 0,				// the red score 0-999
+	blueScore: 0				// the blue score 0-999
 };
 
 export default class Pixoo {
@@ -108,11 +110,28 @@ export default class Pixoo {
 		return this._binaryBuffer(this._compileMessage(message));
 	}
 
+	// --- Scoreboard channel ---
+
+	score(settings) {
+		settings = settings || {};
+		this.config.redScore = settings.redScore || this.config.redScore;
+		this.config.blueScore = settings.blueScore || this.config.blueScore;
+
+		const message = [
+			"450600",										// Prefix
+			this._intLittleHex(this.config.scoreRed),		// score for red
+			this._intLittleHex(this.config.scoreBlue)		// score for blue
+		].join('');
+		return this._binaryBuffer(this._compileMessage(message));
+	}
+	
 	// --- Visualization channel ---
 	
 	// --- Cloud channel ---
 	
 	// --- Custom channel ---
+
+	// --- Effects channel ---
 
 	// --- Internal methods ---
 

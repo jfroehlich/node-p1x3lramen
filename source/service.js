@@ -48,7 +48,7 @@ export default class Service {
 		this.app.get("/api/brightness", this._brightness.bind(this));
 		this.app.get("/api/lighting", this._lighting.bind(this));
 		this.app.get("/api/clock", this._clock.bind(this));
-		//this.app.get("/api/", this..bind(this));
+		this.app.get("/api/score", this._score.bind(this));
 		//this.app.get("/api/", this..bind(this));
 
 		this.app.get("/test", this._test.bind(this));
@@ -166,6 +166,20 @@ export default class Service {
 			settings.showTemperature = req.query.showCalendar === 'true' ? true : false;
 		}
 		const msg = this.device.clock(settings); 
+		this.connection.writeAll(msg);
+
+		return this._status(req, res);
+	}
+
+	async _score(req, res) {
+		const settings = {};
+		if (req.query.redScore && parseInt(req.query.redScore, 10)) {
+			settings.redScore = parseInt(req.query.redScore, 10);
+		}
+		if (req.query.blueScore && parseInt(req.query.blueScore, 10)) {
+			settings.blueScore = parseInt(req.query.blueScore, 10);
+		}
+		const msg = this.device.score(settings); 
 		this.connection.writeAll(msg);
 
 		return this._status(req, res);
