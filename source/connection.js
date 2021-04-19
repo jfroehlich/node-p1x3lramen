@@ -63,6 +63,7 @@ export default class Connection extends EventEmitter {
 	}
 
 	async write(buffer) {
+		console.log('=>', buffer.toString('hex'));
 		return new Promise((resolve, reject) => {
 			this._port.write(buffer, (error, bytes) => {
 				return !!error ? reject(error) : resolve(bytes);
