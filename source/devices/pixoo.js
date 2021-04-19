@@ -13,7 +13,8 @@ const DEFAULTS = {
 	showTemperature: false,		// show temperature in clock channel 
 	showCalendar: false,		// show calendar in clock channel 
 	redScore: 0,				// the red score 0-999
-	blueScore: 0				// the blue score 0-999
+	blueScore: 0,				// the blue score 0-999
+	visualizationMode: 0		// 
 };
 
 export default class Pixoo {
@@ -72,7 +73,8 @@ export default class Pixoo {
 	/**
 	 * Switches to clock mode and sets clock mode options.
 	 *
-	 * @param {object} [settings]
+	 * @param {object} [settings] - The settings for the clock mode
+	 * @param {object} [settings.mode] - The clock mode
 	 */
 	clock(settings) {
 		settings = settings || {};
@@ -130,13 +132,36 @@ export default class Pixoo {
 		return this._compile(this._assembleMessage(message));
 	}
 	
+	// --- Effects channel ---
+
+	effect(settings) {
+		settings = settings || {};
+		this.config.effectMode = settings.mode || this.config.effectMode;
+
+		const message = [
+			"4503",										// Prefix
+			this._intHex(this.config.effectMode),		// visualization mode
+		].join('');
+		return this._compile(this._assembleMessage(message));
+	}
+	
 	// --- Visualization channel ---
+
+	visualization(settings) {
+		settings = settings || {};
+		this.config.visualizationMode = settings.mode || this.config.visualizationMode;
+
+		const message = [
+			"4504",										// Prefix
+			this._intHex(this.config.visualizationMode),		// visualization mode
+		].join('');
+		return this._compile(this._assembleMessage(message));
+	}
 	
 	// --- Cloud channel ---
 	
 	// --- Custom channel ---
 
-	// --- Effects channel ---
 
 	// --- Internal methods ---
 

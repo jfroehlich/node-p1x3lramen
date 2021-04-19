@@ -49,6 +49,8 @@ export default class Service {
 		this.app.get("/api/lighting", this._lighting.bind(this));
 		this.app.get("/api/clock", this._clock.bind(this));
 		this.app.get("/api/score", this._score.bind(this));
+		this.app.get("/api/visualization", this._visualization.bind(this));
+		this.app.get("/api/effect", this._effect.bind(this));
 		//this.app.get("/api/", this..bind(this));
 
 		this.app.get("/test", this._test.bind(this));
@@ -183,6 +185,30 @@ export default class Service {
 			settings.blue = parseInt(req.query.blue, 10);
 		}
 		const msg = this.device.score(settings); 
+		this.connection.writeAll(msg);
+
+		return this._status(req, res);
+	}
+
+	async _effect(req, res) {
+		const settings = {};
+		if (req.query.mode && parseInt(req.query.mode, 10)) {
+			settings.mode = parseInt(req.query.mode, 10);
+		}
+
+		const msg = this.device.effect(settings); 
+		this.connection.writeAll(msg);
+
+		return this._status(req, res);
+	}
+
+	async _visualization(req, res) {
+		const settings = {};
+		if (req.query.mode && parseInt(req.query.mode, 10)) {
+			settings.mode = parseInt(req.query.mode, 10);
+		}
+
+		const msg = this.device.visualization(settings); 
 		this.connection.writeAll(msg);
 
 		return this._status(req, res);
