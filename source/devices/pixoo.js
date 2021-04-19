@@ -9,9 +9,9 @@ const DEFAULTS = {
 	clockMode: 0,				// Clock modes: 0 fullscreen, 1 rainbow, 2 boxed, 3 analog square, 4 fullscreen negative, 5 analog round, 6 widescreen 
 	powerScreen: true,			// switch screen on/off
 	showTime: true,				// show the time in clock channel 
-	showWeather: true,			// show weather in clock channel 
-	showTemperature: true,		// show temperature in clock channel 
-	showCalendar: true,			// show calendar in clock channel 
+	showWeather: false,			// show weather in clock channel 
+	showTemperature: false,		// show temperature in clock channel 
+	showCalendar: false,		// show calendar in clock channel 
 	redScore: 0,				// the red score 0-999
 	blueScore: 0				// the blue score 0-999
 };
@@ -34,7 +34,7 @@ export default class Pixoo {
 			"74",										// Prefix for light
 			this._percentHex(this.config.brightness)	// Brightness from 0-100
 		].join('');
-		return this._binaryBuffer(this._compileMessage(message));
+		return this._compile(this._assembleMessage(message));
 	}
 
 	datetime(settings) {
@@ -51,7 +51,7 @@ export default class Pixoo {
 			this._intHex(date.getSeconds()),
 			"00"
 		].join('');
-		return this._binaryBuffer(this._compileMessage(message));
+		return this._compile(this._assembleMessage(message));
 	}
 
 	climate(settings) {
@@ -64,11 +64,16 @@ export default class Pixoo {
 			(this.config.temperature >= 0) ? this._intHex(this.config.temperature) : this._intHex(256 + this.config.temperature),
 			this._intHex(this.config.weather)
 		].join('');
-		return this._binaryBuffer(this._compileMessage(message));
+		return this._compile(this._assembleMessage(message));
 	}
 
 	// --- Clock Mode ---
 	
+	/**
+	 * Switches to clock mode and sets clock mode options.
+	 *
+	 * @param {object} [settings]
+	 */
 	clock(settings) {
 		settings = settings || {};
 		this.config.clockMode = settings.mode || this.config.clockMode;
@@ -87,14 +92,14 @@ export default class Pixoo {
 			this._boolHex(this.config.showCalendar),
 			this._colorHex(this.config.color)
 		].join('');
-		return this._binaryBuffer(this._compileMessage(message));
+		return this._compile(this._assembleMessage(message));
 	}
 
 	// --- Lighting Mode --
 	
 	lighting(settings) {
 		settings = settings || {};
-		this.config.lightingMode = settings.lightingMode || this.config.lightingMode;
+		this.config.lightingMode = settings.mode || this.config.lightingMode;
 		this.config.color = settings.color || this.config.color;
 		this.config.brightness = settings.brightness || this.config.brightness;
 		this.config.powerScreen = settings.powerScreen || this.config.powerScreen;
@@ -107,22 +112,22 @@ export default class Pixoo {
 			this._boolHex(this.config.powerScreen),		// power
 			"000000"									// suffix or functions?
 		].join('');
-		return this._binaryBuffer(this._compileMessage(message));
+		return this._compile(this._assembleMessage(message));
 	}
 
 	// --- Scoreboard channel ---
 
 	score(settings) {
 		settings = settings || {};
-		this.config.redScore = settings.redScore || this.config.redScore;
-		this.config.blueScore = settings.blueScore || this.config.blueScore;
+		this.config.redScore = settings.red || this.config.redScore;
+		this.config.blueScore = settings.blue || this.config.blueScore;
 
 		const message = [
 			"450600",										// Prefix
-			this._intLittleHex(this.config.scoreRed),		// score for red
-			this._intLittleHex(this.config.scoreBlue)		// score for blue
+			this._intLittleHex(Math.min(999, this.config.redScore)),		// score for red
+			this._intLittleHex(Math.min(999, this.config.blueScore))		// score for blue
 		].join('');
-		return this._binaryBuffer(this._compileMessage(message));
+		return this._compile(this._assembleMessage(message));
 	}
 	
 	// --- Visualization channel ---
@@ -184,7 +189,7 @@ export default class Pixoo {
 		return result;
 	}
 
-	_compileMessage(payload) {
+	_assembleMessage(payload) {
 		let lengthHS = this._intLittleHex((payload.length + 4) / 2);
 		
 		let msg = '' + lengthHS + payload;
@@ -195,20 +200,35 @@ export default class Pixoo {
 		let crc = sum % 65536;
 		let crcHS = this._intLittleHex(crc); 
 
-		return [
-			'01',
-			lengthHS,
-			payload,
-			crcHS,
-			'02'
-		].join('');
+		return [ '01', lengthHS, payload, crcHS, '02' ].join('');
 	}
 
-	_binaryBuffer(message) {
-		let bufferArray = [];
+	_dissambleMessage(msg) {
+	  let answer = {};
+	  answer.ascii = msg;
+	  answer.crc = msg.slice(-6, msg.length - 2);
+	  answer.payloadLength = msg.slice(2, 6);
+	  answer.command = msg.slice(8, 10);
+	  answer.fixed = msg.slice(10, 12);
+	  answer.cmddata = msg.slice(12, msg.length - 6);
+	  return answer;
+	}
+
+	/**
+	 * Create a binary buffer array from a hex message string.
+	 *
+	 * @param {string} message - The message string.
+	 * @returns {Array} - An array of buffers ready to send to the device.
+	 */
+	_compile(message) {
+		let buffers = [];
 		message.match(/.{1,1332}/g).forEach(part => {
-			bufferArray.push(Buffer.from(this._unHex(part), 'binary'));
+			buffers.push(Buffer.from(this._unHex(part), 'binary'));
 		});
-		return bufferArray;
+		return buffers;
+	}
+
+	_decompile(buffer) {
+		return buffer.toString('ascii');	
 	}
 }

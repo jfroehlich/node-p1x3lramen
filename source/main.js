@@ -72,6 +72,12 @@ const settings = {
 			process.emit("SIGINT");
 		});
 	}
+	
+	// There should be the MAC address by now and connect to the device if it
+	// is paired.
+	const connection = new Connection(settings.connection);
+	const device = new Pixoo(settings.device);
+	const service = new Service(settings.service);
 
 	// Let's disconnect properly from the device.
 	process.on('SIGINT', (code) => {
@@ -80,13 +86,23 @@ const settings = {
 		process.exit();
 	});
 
-	// -- testing things --
-
-	// This is the proof of concept for now. It should have the
-	// MAC address by now and connect to the device if it is paired.
-	const connection = new Connection(settings.connection);
-	const device = new Pixoo(settings.device);
-	const service = new Service(settings.service);
+	// let's log a bit.
+	connection.on("connecting", attempt => {
+		console.log(`Connection attempt ${attempt+1}/${settings.connection.maxConnectAttempts}`);
+	});
+	connection.on("received", buffer => {
+		console.log("<=", buffer.toString("hex"));
+		//console.log("<=", device._dissambleMessage(buffer.toString("hex")));
+	});
+	connection.on("sending", buffer => {
+		console.log("=>", buffer.toString("hex"));
+	});
+	connection.on("connected", () => {
+		console.log("Connected.");
+	})
+	connection.on("error", error => {
+		console.log("Error:", error);
+	});
 
 	//console.log('Connecting to Pixoo:', address);
 	//await connection.connect(address);

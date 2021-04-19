@@ -134,8 +134,8 @@ export default class Service {
 		if (req.query.brightness && parseInt(req.query.brightness, 10)) {
 			settings.brightness = parseInt(req.query.brightness, 10);
 		}
-		if (req.query.lightingMode && parseInt(req.query.lightingMode, 10)) {
-			settings.lightingMode = parseInt(req.query.lightingMode, 10);
+		if (req.query.mode && parseInt(req.query.mode, 10)) {
+			settings.mode = parseInt(req.query.mode, 10);
 		}
 		if (typeof req.query.powerScreen === 'string') {
 			settings.powerScreen = req.query.powerScreen === 'true' ? true : false;
@@ -150,8 +150,8 @@ export default class Service {
 	async _clock(req, res) {
 		const settings = {};
 
-		if (req.query.clockMode && parseInt(req.query.clockMode, 10)) {
-			settings.clockMode = parseInt(req.query.clockMode, 10);
+		if (req.query.mode && parseInt(req.query.mode, 10)) {
+			settings.mode = parseInt(req.query.mode, 10);
 		}
 		if (typeof req.query.showTime === 'string') {
 			settings.showTime = req.query.showTime === 'true' ? true : false;
@@ -165,6 +165,9 @@ export default class Service {
 		if (typeof req.query.showCalendar === 'string') {
 			settings.showTemperature = req.query.showCalendar === 'true' ? true : false;
 		}
+		if (typeof req.query.color === 'string' && req.query.color.length === 6) {
+			settings.color = req.query.color;
+		}
 		const msg = this.device.clock(settings); 
 		this.connection.writeAll(msg);
 
@@ -173,11 +176,11 @@ export default class Service {
 
 	async _score(req, res) {
 		const settings = {};
-		if (req.query.redScore && parseInt(req.query.redScore, 10)) {
-			settings.redScore = parseInt(req.query.redScore, 10);
+		if (req.query.red && parseInt(req.query.red, 10)) {
+			settings.red = parseInt(req.query.red, 10);
 		}
-		if (req.query.blueScore && parseInt(req.query.blueScore, 10)) {
-			settings.blueScore = parseInt(req.query.blueScore, 10);
+		if (req.query.blue && parseInt(req.query.blue, 10)) {
+			settings.blue = parseInt(req.query.blue, 10);
 		}
 		const msg = this.device.score(settings); 
 		this.connection.writeAll(msg);
