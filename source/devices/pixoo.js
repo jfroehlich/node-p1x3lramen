@@ -47,7 +47,7 @@ export default class Pixoo {
 		this.config.brightness = level;
 
 		const message = [
-			"74",										// Prefix for light
+			"74",										// Prefix 
 			this._percentHex(this.config.brightness)	// Brightness from 0-100
 		].join('');
 		return this._compile(this._assembleMessage(message));
@@ -57,7 +57,7 @@ export default class Pixoo {
 		settings = settings || {};
 		let date = settings.date || new Date();
 		const message = [
-			"18",										// Prefix for light
+			"18",										// Prefix 
 			this._intHex(Number(date.getFullYear().toString().padStart(4, "0").slice(2))),
 			this._intHex(Number(date.getFullYear().toString().padStart(4, "0").slice(0, 2))),
 			this._intHex(date.getMonth() + 1),
@@ -178,7 +178,7 @@ export default class Pixoo {
 	// --- Custom channel ---
 
 
-	// --- Internal methods ---
+	// --- Helper methods ---
 
 	_intHex(int) {
 		if (int > 255 || int < 0) {

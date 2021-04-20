@@ -104,14 +104,6 @@ const settings = {
 		console.log("Error:", error);
 	});
 
-	await connection.connect();
-	await connection._sleep(50);
-	let message = device.datetime({date: new Date('2006-09-18T16:34:00')});
-	for (let buffer of message) {
-		console.log('=>', buffer);
-		console.log('length:', await connection.write(buffer));
-	}
-
 	//console.log('Connecting to Pixoo:', address);
 	//await connection.connect(address);
 	service.start(connection, device);

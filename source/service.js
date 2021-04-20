@@ -122,12 +122,11 @@ export default class Service {
 		return this._status(req, res);
 	}
 
-	// FIXME Not working as expected.
 	async _datetime(req, res) {
 		const settings = {}; 	
 		let msg = "";
 
-		settings.date = typeof req.query.date ? new Date(req.query.date) : new Date();
+		settings.date = typeof req.query.date === "string" ? new Date(req.query.date) : new Date();
 		msg = this.device.datetime(settings); 
 		this.connection.writeAll(msg);
 
