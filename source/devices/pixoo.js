@@ -14,7 +14,8 @@ const DEFAULTS = {
 	showCalendar: false,		// show calendar in clock channel 
 	redScore: 0,				// the red score 0-999
 	blueScore: 0,				// the blue score 0-999
-	visualizationMode: 0		// 
+	visualizationMode: 0,		// 
+	fulldayMode: true
 };
 
 export default class Pixoo {
@@ -23,6 +24,20 @@ export default class Pixoo {
 	}
 
 	// --- Base Commands ---
+	
+	fullday(settings) {
+		settings = settings || {};
+		if (typeof settings.enable === "boolean") {
+			this.config.fulldayMode = settings.enable;
+		}
+		
+		// thanks julijane
+		const message = [
+			"2d",										// Prefix for light
+			this._boolHex(this.config.fulldayMode)
+		].join('');
+		return this._compile(this._assembleMessage(message));
+	}
 	
 	brightness(settings) {
 		settings = settings || {};

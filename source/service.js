@@ -45,6 +45,8 @@ export default class Service {
 		this.app.get("/api/connect", this._connect.bind(this));
 		this.app.get("/api/disconnect", this._disconnect.bind(this));
 
+		this.app.get("/api/fullday", this._fullday.bind(this));
+		this.app.get("/api/datetime", this._datetime.bind(this));
 		this.app.get("/api/brightness", this._brightness.bind(this));
 		this.app.get("/api/lighting", this._lighting.bind(this));
 		this.app.get("/api/clock", this._clock.bind(this));
@@ -108,7 +110,32 @@ export default class Service {
 		return this._status(req, res);
 	}
 
+	async _fullday(req, res) {
+		const settings = {}; 	
+
+		if (typeof req.query.enable === 'string') {
+			settings.enable = req.query.enable === 'true' ? true : false;
+		}
+		const msg = this.device.fullday(settings); 
+		this.connection.writeAll(msg);
+
+		return this._status(req, res);
+	}
+
+	// FIXME Not working as expected.
 	async _datetime(req, res) {
+		const settings = {}; 	
+		let msg = "";
+
+		settings.date = typeof req.query.date ? new Date(req.query.date) : new Date();
+		msg = this.device.datetime(settings); 
+		this.connection.writeAll(msg);
+
+		if (typeof req.query.fulldayMode === 'string') {
+			settings.enable = req.query.fulldayMode === 'true' ? true : false;
+			msg = this.device.fullday(settings); 
+			this.connection.writeAll(msg);
+		}
 
 		return this._status(req, res);
 	}
