@@ -72,6 +72,45 @@ cli command, is actually for the evo, is a bit complicated and I don't like
 type script that much. So, I decided to write my own little app. Feel free to
 use it and get inspired.
 
+HTTP API
+--------------------------------------------------------------------------------
+
+`/api/status`
+
+`/api/connect`
+
+`/api/disconnect`
+
+`/api/fullday?enable=<boolean>`  
+Switches between 12h and 24h mode.
+
+`/api/datetime?date=<isodate>&fullday=<boolean>`
+
+`/api/brightness?level=<number>`
+
+`/api/lighting?color=<hexcolor>&brightness=<number>&mode=<number>&powerScreen=<boolean>`
+
+`/api/clock?mode=<number>&showTime=<bool>&showWeather=<bool>&showTemperature=<bool>&showCalendar=<bool>&color=<hexcolor>`
+
+`/api/score?red=<num>&blue=<num>`
+
+`/api/visualization?mode=<num>`
+
+`/api/effect?mode=<num>`
+
+`/api/test`
+
+
+References
+--------------------------------------------------------------------------------
+
+This project is build using the ingenuity of many others:
+
+- [github: node-timebox-evo][1]
+- [Thread about Divoom Devices in the FHEM forum (de)](https://forum.fhem.de/index.php?topic=81593.0)
+- [github: divoom timebox/aurabox fhem lib in perl](https://github.com/mumpitzstuff/fhem-Divoom)
+
+
 [1]: https://github.com/RomRider/node-divoom-timebox-evo
 
 
