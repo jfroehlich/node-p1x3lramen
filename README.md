@@ -77,22 +77,29 @@ HTTP API
 
 `/api/status`
 
-`/api/connect`
+`/api/connect`  
+Connect the device
 
-`/api/disconnect`
+`/api/disconnect`  
+Disconnect the device
 
-`/api/fullday?enable=<boolean>`  
+`/api/fullday?enable=<bool>`  
 Switches between 12h and 24h mode.
 
-`/api/datetime?date=<isodate>&fullday=<boolean>`
+`/api/datetime?date=<isodate>&fullday=<bool>`  
+Updates the time and switches between 12h and 24h mode
 
-`/api/brightness?level=<number>`
+`/api/brightness?level=<num>`  
+Sets the brightness level
 
-`/api/lighting?color=<hexcolor>&brightness=<number>&mode=<number>&powerScreen=<boolean>`
+`/api/lighting?color=<hexcolor>&brightness=<num>&mode=<num>&powerScreen=<bool>`  
+Sets the color and brightness or switches the screen off
 
-`/api/clock?mode=<number>&showTime=<bool>&showWeather=<bool>&showTemperature=<bool>&showCalendar=<bool>&color=<hexcolor>`
+`/api/clock?mode=<number>&showTime=<bool>&showWeather=<bool>&showTemperature=<bool>&showCalendar=<bool>&color=<hexcolor>`  
+Switches between clock modes and sets it's config
 
-`/api/score?red=<num>&blue=<num>`
+`/api/score?red=<num>&blue=<num>`  
+Switches to score mode and sets the scores for red and blue
 
 `/api/visualization?mode=<num>`
 
