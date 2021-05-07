@@ -106,6 +106,8 @@ This is a quick documentation of the HTTP API. For the range of values look at
 
 - `/api/effect?mode=<num>`
 
+- `/api/climate?weather=<num>&temperature=<num>` Set the weather and temperature
+
 - `/api/test` A very basic integration test.
 
 

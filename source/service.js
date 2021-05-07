@@ -41,6 +41,7 @@ export default class Service {
 		apiRouter.get("/score", this._score.bind(this));
 		apiRouter.get("/visualization", this._visualization.bind(this));
 		apiRouter.get("/effect", this._effect.bind(this));
+		apiRouter.get("/climate", this._climate.bind(this));
 
 		// routes
 
@@ -136,6 +137,7 @@ export default class Service {
 	}
 
 	async _climate(req, res) {
+		const settings = {};
 		if (req.query.weather && parseInt(req.query.weather, 10)) {
 			settings.weather = parseInt(req.query.weather, 10);
 		}
