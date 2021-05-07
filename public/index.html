@@ -20,6 +20,70 @@
 			</p>
 		</section>
 
+		<hr />
+
+		<form action="/api/clock" method="GET">
+			<fieldset>
+				<legend>Clock command</legend>
+				<div class="FormField">
+					<p class="Label">Clock mode</p>
+					<ul>
+						<li>
+							<input type="radio" name="mode" id="form01-field01-01" value="0"/>
+							<label for="form01-field01-01">Full screen</label>
+						</li>
+						<li>
+							<input type="radio" name="mode" id="form01-field01-02" value="1"/>
+							<label for="form01-field01-02">Rainbow</label>
+						</li>
+						<li>
+							<input type="radio" name="mode" id="form01-field01-03" value="2"/>
+							<label for="form01-field01-03">Boxed</label>
+						</li>
+						<li>
+							<input type="radio" name="mode" id="form01-field01-04" value="3"/>
+							<label for="form01-field01-04">Analog square</label>
+						</li>
+						<li>
+							<input type="radio" name="mode" id="form01-field01-05" value="4"/>
+							<label for="form01-field01-05">Fullscreen negative</label>
+						</li>
+						<li>
+							<input type="radio" name="mode" id="form01-field01-06" value="5"/>
+							<label for="form01-field01-06">Analog round</label>
+						</li>
+						<li>
+							<input type="radio" name="mode" id="form01-field01-07" value="6"/>
+							<label for="form01-field01-07">Wide screen</label>
+						</li>
+					</ul>
+				</div>
+				<p class="FormField">
+					<input type="checkbox" name="showTime" id="form01-field02" value="true" checked/>
+					<label for="form01-field02">Show time</label>
+				</p>
+				<p class="FormField">
+					<input type="checkbox" name="showWeather" id="form01-field03" value="true" checked/>
+					<label for="form01-field03">Show weather</label>
+				</p>
+				<p class="FormField">
+					<input type="checkbox" name="showTemperature" id="form01-field04" value="true" checked/>
+					<label for="form01-field04">Show temperature</label>
+				</p>
+				<p class="FormField">
+					<input type="checkbox" name="showCalendar" id="form01-field05" value="true" checked/>
+					<label for="form01-field05">Show calendar</label>
+				</p>
+				<p class="FormField">
+					<label for="form01-field06">Color</label>
+					<input name="color" id="form01-field06" type="color" value="#ffffff"/>
+				</p>
+				<p class="actions">
+					<input type="submit" value="Send clock command"/>
+				</p>
+			</fieldset>
+		</form>
+
 	</main>
 	<footer></footer>
 	<script type="text/javascript">
