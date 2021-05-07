@@ -76,42 +76,37 @@ HTTP API
 --------------------------------------------------------------------------------
 
 This is a quick documentation of the HTTP API. For the range of values look at
-`source/devices/pxioo.js` for now.
+`source/devices/pxioo.js` for now. 
 
-- `/api/status`
-  returns the current connection status and the app configuration for the
-  device
+- `/api/status` returns the current connection status and the app configuration
+  for the device
 
-- `/api/connect`  
-  Connect to the device
+- `/api/connect` Connect to the device
 
-- `/api/disconnect`  
-  Disconnect from the device
+- `/api/disconnect` Disconnect from the device
 
-- `/api/fullday?enable=<bool>`  
-  Switches between 12h and 24h mode. Note: Does work, but not as expected --
-  don't know why.
+- `/api/fullday?enable=<bool>` Switches between 12h and 24h mode. Note: Does
+  work, but not as expected -- don't know why.
 
-- `/api/datetime?date=<isodate>&fullday=<bool>`  
-  Updates the time and switches between 12h and 24h mode
+- `/api/datetime?date=<isodate>&fullday=<bool>` Updates the time and switches
+  between 12h and 24h mode
 
-- `/api/brightness?level=<num>`  
-  Sets the brightness level
+- `/api/brightness?level=<num>` Sets the brightness level
 
-- `/api/lighting?color=<hexcolor>&brightness=<num>&mode=<num>&powerScreen=<bool>`  
+- `/api/lighting?color=<hexcolor>&brightness=<num>&mode=<num>&powerScreen=<bool>`
   Sets the color and brightness or switches the screen off
 
-- `/api/clock?mode=<number>&showTime=<bool>&showWeather=<bool>&showTemperature=<bool>&showCalendar=<bool>&color=<hexcolor>`  
+- `/api/clock?mode=<num>&showTime=<bool>&showWeather=<bool>&showTemperature=<bool>&showCalendar=<bool>&color=<hexcolor>`
   Switches between clock modes and sets it's config
 
-- `/api/score?red=<num>&blue=<num>`  
-  Switches to score mode and sets the scores for red and blue
+- `/api/score?red=<num>&blue=<num>` Switches to score mode and sets the scores
+  for red and blue
 
 - `/api/visualization?mode=<num>`
 
 - `/api/effect?mode=<num>`
 
-- `/api/test`
+- `/api/test` A very basic integration test.
 
 
 References
