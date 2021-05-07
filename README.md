@@ -1,4 +1,4 @@
-pixelramen
+p1x3lramen
 ================================================================================
 
 Using an HTTP server to send pixel soup to a Divoom Pixoo LED panel over a
@@ -42,8 +42,8 @@ Open a terminal (yea, doesn't work without it), clone the project from github
 and install the dependencies:
 
 ```sh
-git clone https://github.com/jfroehlich/pixelramen
-cd pixelramen
+git clone https://github.com/jfroehlich/node-p1x3lramen
+cd node-p1x3lramen
 npm install
 ```
 
