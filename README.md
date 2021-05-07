@@ -43,7 +43,7 @@ and install the dependencies:
 
 ```sh
 git clone https://github.com/jfroehlich/node-p1x3lramen
-cd pixelramen
+cd node-p1x3lramen
 npm install
 ```
 
