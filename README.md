@@ -42,7 +42,7 @@ Open a terminal (yea, doesn't work without it), clone the project from github
 and install the dependencies:
 
 ```sh
-git clone https://github.com/jfroehlich/pixelramen
+git clone https://github.com/jfroehlich/node-p1x3lramen
 cd pixelramen
 npm install
 ```
