@@ -31,29 +31,25 @@ export default class Service {
 		this.device = device;
 		this.app = express();
 		
-		// middleware
-		
-		if (this.config.autoConnect) {
-			this.app.use(this._autoconnect.bind(this));
-		}
+		let apiRouter = express.Router();
+		apiRouter.use(this._autoconnect.bind(this));
+		apiRouter.get("/fullday", this._fullday.bind(this));
+		apiRouter.get("/datetime", this._datetime.bind(this));
+		apiRouter.get("/brightness", this._brightness.bind(this));
+		apiRouter.get("/lighting", this._lighting.bind(this));
+		apiRouter.get("/clock", this._clock.bind(this));
+		apiRouter.get("/score", this._score.bind(this));
+		apiRouter.get("/visualization", this._visualization.bind(this));
+		apiRouter.get("/effect", this._effect.bind(this));
 
 		// routes
 
-		// this.app.get("/")	// TODO an experi/mental ui
 		this.app.use('/', express.static('public'));
+
 		this.app.get("/api/status", this._status.bind(this));
 		this.app.get("/api/connect", this._connect.bind(this));
 		this.app.get("/api/disconnect", this._disconnect.bind(this));
-
-		this.app.get("/api/fullday", this._fullday.bind(this));
-		this.app.get("/api/datetime", this._datetime.bind(this));
-		this.app.get("/api/brightness", this._brightness.bind(this));
-		this.app.get("/api/lighting", this._lighting.bind(this));
-		this.app.get("/api/clock", this._clock.bind(this));
-		this.app.get("/api/score", this._score.bind(this));
-		this.app.get("/api/visualization", this._visualization.bind(this));
-		this.app.get("/api/effect", this._effect.bind(this));
-		//this.app.get("/api/", this..bind(this));
+		this.app.use('/api', apiRouter);
 
 		this.app.get("/test", this._test.bind(this));
 
@@ -69,7 +65,7 @@ export default class Service {
 	// --- connection and status handlers ---
 
 	async _autoconnect(req, res, next) {
-		if (!!this.connection.isConnected() === false) {
+		if (this.config.autoConnect && !!this.connection.isConnected() === false) {
 			await this.connection.connect();
 		}
 		next();

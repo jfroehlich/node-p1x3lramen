@@ -1,5 +1,5 @@
 {
-  "name": "pixelramen",
+  "name": "node-p1x3lramen",
   "version": "1.0.0-alpha",
   "description": "Sending pixel soup to a Divoom Pixoo LED panel.",
   "main": "index.js",
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jfroehlich/pixelramen.git"
+    "url": "git+https://github.com/jfroehlich/node-p1x3lramen.git"
   },
   "keywords": [
     "divoom",

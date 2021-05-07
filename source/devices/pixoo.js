@@ -15,7 +15,7 @@ const DEFAULTS = {
 	redScore: 0,				// the red score 0-999
 	blueScore: 0,				// the blue score 0-999
 	visualizationMode: 0,		// 
-	fulldayMode: true
+	fulldayMode: true			// switches between 12h and 24h mode
 };
 
 export default class Pixoo {
@@ -176,7 +176,8 @@ export default class Pixoo {
 	// --- Cloud channel ---
 	
 	// --- Custom channel ---
-
+	
+	// --- Switch channels ---
 
 	// --- Helper methods ---
 
