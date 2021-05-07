@@ -58,6 +58,16 @@ should auto connect to the device. You can disconnect by using the HTTP API or b
 killing the app with `ctrl-c`.
 
 
+Testing
+--------------------------------------------------------------------------------
+
+I did write some tests to run them one after each other. You can run them with
+the web server with a configureable delay after each test.
+
+First connect to the device with `/connect` in the browser. When connected call 
+`/test?delay=2000`. The number is the delay in milliseconds.
+
+
 Why this project?
 --------------------------------------------------------------------------------
 

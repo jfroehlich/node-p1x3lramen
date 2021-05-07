@@ -241,7 +241,7 @@ export default class Service {
 	// --- integration tests ---
 
 	async _test(req, res) {
-		let testDelay = req.query.delay ? parseInt(req.query.delay, 10) : 500;
+		let testDelay = req.query.delay ? parseInt(req.query.delay, 10) : 2000;
 		
 		// testing the date time 
 		await testDateTimeIntegration(this.device, this.connection, testDelay);
