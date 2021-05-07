@@ -75,37 +75,43 @@ use it and get inspired.
 HTTP API
 --------------------------------------------------------------------------------
 
-`/api/status`
+This is a quick documentation of the HTTP API. For the range of values look at
+`source/devices/pxioo.js` for now.
 
-`/api/connect`  
-Connect the device
+- `/api/status`
+  returns the current connection status and the app configuration for the
+  device
 
-`/api/disconnect`  
-Disconnect the device
+- `/api/connect`  
+  Connect to the device
 
-`/api/fullday?enable=<bool>`  
-Switches between 12h and 24h mode.
+- `/api/disconnect`  
+  Disconnect from the device
 
-`/api/datetime?date=<isodate>&fullday=<bool>`  
-Updates the time and switches between 12h and 24h mode
+- `/api/fullday?enable=<bool>`  
+  Switches between 12h and 24h mode. Note: Does work, but not as expected --
+  don't know why.
 
-`/api/brightness?level=<num>`  
-Sets the brightness level
+- `/api/datetime?date=<isodate>&fullday=<bool>`  
+  Updates the time and switches between 12h and 24h mode
 
-`/api/lighting?color=<hexcolor>&brightness=<num>&mode=<num>&powerScreen=<bool>`  
-Sets the color and brightness or switches the screen off
+- `/api/brightness?level=<num>`  
+  Sets the brightness level
 
-`/api/clock?mode=<number>&showTime=<bool>&showWeather=<bool>&showTemperature=<bool>&showCalendar=<bool>&color=<hexcolor>`  
-Switches between clock modes and sets it's config
+- `/api/lighting?color=<hexcolor>&brightness=<num>&mode=<num>&powerScreen=<bool>`  
+  Sets the color and brightness or switches the screen off
 
-`/api/score?red=<num>&blue=<num>`  
-Switches to score mode and sets the scores for red and blue
+- `/api/clock?mode=<number>&showTime=<bool>&showWeather=<bool>&showTemperature=<bool>&showCalendar=<bool>&color=<hexcolor>`  
+  Switches between clock modes and sets it's config
 
-`/api/visualization?mode=<num>`
+- `/api/score?red=<num>&blue=<num>`  
+  Switches to score mode and sets the scores for red and blue
 
-`/api/effect?mode=<num>`
+- `/api/visualization?mode=<num>`
 
-`/api/test`
+- `/api/effect?mode=<num>`
+
+- `/api/test`
 
 
 References
