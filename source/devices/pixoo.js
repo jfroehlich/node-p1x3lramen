@@ -94,10 +94,10 @@ export default class Pixoo {
 	clock(settings) {
 		settings = settings || {};
 		this.config.clockMode = settings.mode || this.config.clockMode;
-		this.config.showTime = settings.showTime || this.config.showTime;;
-		this.config.showWeather = settings.showWeather || this.config.showWeather;
-		this.config.showTemperature = settings.showTemperature || this.config.showTemperature;
-		this.config.showCalendar = settings.showCalendar || this.config.showCalendar;
+		this.config.showTime = (typeof settings.showTime === "boolean") ? settings.showTime : this.config.showTime;;
+		this.config.showWeather = (typeof settings.showWeather === "boolean") ? settings.showWeather : this.config.showWeather;
+		this.config.showTemperature = (typeof settings.showTemperature === "boolean") ? settings.showTemperature : this.config.showTemperature;
+		this.config.showCalendar = (typeof settings.showCalendar === "boolean") ? settings.showCalendar : this.config.showCalendar;
 		this.config.color = settings.color || this.config.color;
 
 		const message = [

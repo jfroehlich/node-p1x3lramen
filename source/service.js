@@ -189,7 +189,7 @@ export default class Service {
 			settings.showTemperature = req.query.showTemperature === 'true' ? true : false;
 		}
 		if (typeof req.query.showCalendar === 'string') {
-			settings.showTemperature = req.query.showCalendar === 'true' ? true : false;
+			settings.showCalendar = req.query.showCalendar === 'true' ? true : false;
 		}
 		if (typeof req.query.color === 'string' && req.query.color.length === 6) {
 			settings.color = req.query.color;
