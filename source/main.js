@@ -32,7 +32,11 @@ const settings = {
 
 	// Let's asume we call index.js always over node
 	let address = process.argv[2] === undefined ? null : process.argv[2];
+	let port = process.argv[3] === undefined ? null : process.argv[3];
 
+	if(port != null){
+		settings.service.port = port;
+	}
 	// node-bluetooth-serial-port does not support listing paired devices
 	// on linux – sais the documentation.
 	if (address === null && process.platform === 'linux') {

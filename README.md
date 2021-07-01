@@ -57,6 +57,12 @@ This will start the http server. Open `localhost:8000` in a browser. This
 should auto connect to the device. You can disconnect by using the HTTP API or by
 killing the app with `ctrl-c`.
 
+### Start with different Port (optional)
+
+```sh
+node index.js <MAC> <PORT>
+```
+This will start the http server. Open `localhost:<PORT>` in a browser.
 
 Testing
 --------------------------------------------------------------------------------
