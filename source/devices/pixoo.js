@@ -24,13 +24,26 @@ export default class Pixoo {
 	}
 
 	// --- Base Commands ---
-	
+
+	powerScreen(settings){
+		settings = settings || {}
+		if(typeof settings.enable === "boolean"){
+			this.config.powerScreen = settings.enable
+		}
+
+		const message = [
+			"74",
+			this._boolHex(this.config.powerScreen)
+		].join('');
+		return this._compile(this._assembleMessage(message));
+	}
+
 	fullday(settings) {
 		settings = settings || {};
 		if (typeof settings.enable === "boolean") {
 			this.config.fulldayMode = settings.enable;
 		}
-		
+
 		// thanks julijane
 		const message = [
 			"2d",										// Prefix for light
@@ -38,7 +51,7 @@ export default class Pixoo {
 		].join('');
 		return this._compile(this._assembleMessage(message));
 	}
-	
+
 	brightness(settings) {
 		settings = settings || {};
 		let level = settings.level || this.config.brightness;
@@ -74,7 +87,7 @@ export default class Pixoo {
 		settings = settings || {};
 		this.config.weather = settings.weather || this.config.weather;
 		this.config.temperature = settings.temperature || this.config.temperature;
-		
+
 		const message = [
 			"5F",										// prefix 
 			(this.config.temperature >= 0) ? this._intHex(this.config.temperature) : this._intHex(256 + this.config.temperature),
@@ -84,7 +97,7 @@ export default class Pixoo {
 	}
 
 	// --- Clock Mode ---
-	
+
 	/**
 	 * Switches to clock mode and sets clock mode options.
 	 *
@@ -113,7 +126,7 @@ export default class Pixoo {
 	}
 
 	// --- Lighting Mode --
-	
+
 	lighting(settings) {
 		settings = settings || {};
 		this.config.lightingMode = settings.mode || this.config.lightingMode;
@@ -146,7 +159,7 @@ export default class Pixoo {
 		].join('');
 		return this._compile(this._assembleMessage(message));
 	}
-	
+
 	// --- Effects channel ---
 
 	effect(settings) {
@@ -159,7 +172,7 @@ export default class Pixoo {
 		].join('');
 		return this._compile(this._assembleMessage(message));
 	}
-	
+
 	// --- Visualization channel ---
 
 	visualization(settings) {
@@ -172,11 +185,11 @@ export default class Pixoo {
 		].join('');
 		return this._compile(this._assembleMessage(message));
 	}
-	
+
 	// --- Cloud channel ---
-	
+
 	// --- Custom channel ---
-	
+
 	// --- Switch channels ---
 
 	// --- Helper methods ---
@@ -232,27 +245,27 @@ export default class Pixoo {
 
 	_assembleMessage(payload) {
 		let lengthHS = this._intLittleHex((payload.length + 4) / 2);
-		
+
 		let msg = '' + lengthHS + payload;
 		let sum = 0;
 		for (var i = 0, l = msg.length; i < l; i+= 2) {
 			sum += parseInt(msg.substr(i, 2), 16);
 		}
 		let crc = sum % 65536;
-		let crcHS = this._intLittleHex(crc); 
+		let crcHS = this._intLittleHex(crc);
 
 		return [ '01', lengthHS, payload, crcHS, '02' ].join('');
 	}
 
 	_dissambleMessage(msg) {
-	  let answer = {};
-	  answer.ascii = msg;
-	  answer.crc = msg.slice(-6, msg.length - 2);
-	  answer.payloadLength = msg.slice(2, 6);
-	  answer.command = msg.slice(8, 10);
-	  answer.fixed = msg.slice(10, 12);
-	  answer.cmddata = msg.slice(12, msg.length - 6);
-	  return answer;
+		let answer = {};
+		answer.ascii = msg;
+		answer.crc = msg.slice(-6, msg.length - 2);
+		answer.payloadLength = msg.slice(2, 6);
+		answer.command = msg.slice(8, 10);
+		answer.fixed = msg.slice(10, 12);
+		answer.cmddata = msg.slice(12, msg.length - 6);
+		return answer;
 	}
 
 	/**
@@ -270,6 +283,6 @@ export default class Pixoo {
 	}
 
 	_decompile(buffer) {
-		return buffer.toString('ascii');	
+		return buffer.toString('ascii');
 	}
 }

@@ -50,7 +50,7 @@ npm install
 Then start the app:
 
 ```sh
-node index.js
+node index.js <MAC>
 ```
 
 This will start the http server. Open `localhost:8000` in a browser. This
@@ -118,7 +118,9 @@ This is a quick documentation of the HTTP API. For the range of values look at
 
 - `/api/climate?weather=<num>&temperature=<num>` Set the weather and temperature
 
-- `/api/test` A very basic integration test.
+- `/api/screenOff?enable=<bool>` Power Screen ON/OFF
+
+- `/test` A very basic integration test.
 
 
 References

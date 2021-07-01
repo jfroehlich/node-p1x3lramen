@@ -26,11 +26,11 @@ export default class Service {
 			console.log("Service is already running and needs to be stopped first.");
 			return;
 		}
-		
+
 		this.connection = connection;
 		this.device = device;
 		this.app = express();
-		
+
 		let apiRouter = express.Router();
 		apiRouter.use(this._autoconnect.bind(this));
 		apiRouter.get("/fullday", this._fullday.bind(this));
@@ -54,9 +54,21 @@ export default class Service {
 
 		this.app.get("/test", this._test.bind(this));
 
+		this.app.get("/api/screenOff", this._screenOFF.bind(this));
+
 		this.app.listen(this.config.port, () => {
 			console.log(`Listening on http://localhost:${this.config.port}`);
 		});
+	}
+
+	async _screenOFF(req, res){
+		const settings = {};
+		if (typeof req.query.enable === 'string') {
+			settings.enable = req.query.enable === 'true' ? true : false;
+		}
+		const msg = this.device.powerScreen(settings);
+		this.connection.writeAll(msg);
+		return this._status(req, res);
 	}
 
 	stop() {
@@ -78,7 +90,7 @@ export default class Service {
 			config: this.device.config
 		});
 	}
-	
+
 	async _connect(req, res) {
 		if (!!this.connection.isConnected() === false) {
 			await this.connection.connect();
@@ -94,42 +106,42 @@ export default class Service {
 	}
 
 	// --- basic commands ---
-	
+
 	async _brightness(req, res) {
-		const settings = {}; 	
+		const settings = {};
 		if (req.query.level && parseInt(req.query.level, 10)) {
 			settings.level = parseInt(req.query.level, 10);
 		}
 
-		const msg = this.device.brightness(settings); 
+		const msg = this.device.brightness(settings);
 		this.connection.writeAll(msg);
 
 		return this._status(req, res);
 	}
 
 	async _fullday(req, res) {
-		const settings = {}; 	
+		const settings = {};
 
 		if (typeof req.query.enable === 'string') {
 			settings.enable = req.query.enable === 'true' ? true : false;
 		}
-		const msg = this.device.fullday(settings); 
+		const msg = this.device.fullday(settings);
 		this.connection.writeAll(msg);
 
 		return this._status(req, res);
 	}
 
 	async _datetime(req, res) {
-		const settings = {}; 	
+		const settings = {};
 		let msg = "";
 
 		settings.date = typeof req.query.date === "string" ? new Date(req.query.date) : new Date();
-		msg = this.device.datetime(settings); 
+		msg = this.device.datetime(settings);
 		this.connection.writeAll(msg);
 
 		if (typeof req.query.fulldayMode === 'string') {
 			settings.enable = req.query.fulldayMode === 'true' ? true : false;
-			msg = this.device.fullday(settings); 
+			msg = this.device.fullday(settings);
 			this.connection.writeAll(msg);
 		}
 
@@ -144,14 +156,14 @@ export default class Service {
 		if (req.query.temperature && parseInt(req.query.temperature, 10)) {
 			settings.temperature = parseInt(req.query.temperature, 10);
 		}
-		const msg = this.device.climate(settings); 
+		const msg = this.device.climate(settings);
 		this.connection.writeAll(msg);
 
 		return this._status(req, res);
 	}
 
 	// --- channel commands ---
-	
+
 	async _lighting(req, res) {
 		const settings = {};
 		if (req.query.color) {
@@ -167,9 +179,9 @@ export default class Service {
 			settings.powerScreen = req.query.powerScreen === 'true' ? true : false;
 		}
 
-		const msg = this.device.lighting(settings); 
+		const msg = this.device.lighting(settings);
 		this.connection.writeAll(msg);
-		
+
 		return this._status(req, res);
 	}
 
@@ -194,7 +206,7 @@ export default class Service {
 		if (typeof req.query.color === 'string' && req.query.color.length === 6) {
 			settings.color = req.query.color;
 		}
-		const msg = this.device.clock(settings); 
+		const msg = this.device.clock(settings);
 		this.connection.writeAll(msg);
 
 		return this._status(req, res);
@@ -208,7 +220,7 @@ export default class Service {
 		if (req.query.blue && parseInt(req.query.blue, 10)) {
 			settings.blue = parseInt(req.query.blue, 10);
 		}
-		const msg = this.device.score(settings); 
+		const msg = this.device.score(settings);
 		this.connection.writeAll(msg);
 
 		return this._status(req, res);
@@ -220,7 +232,7 @@ export default class Service {
 			settings.mode = parseInt(req.query.mode, 10);
 		}
 
-		const msg = this.device.effect(settings); 
+		const msg = this.device.effect(settings);
 		this.connection.writeAll(msg);
 
 		return this._status(req, res);
@@ -232,7 +244,7 @@ export default class Service {
 			settings.mode = parseInt(req.query.mode, 10);
 		}
 
-		const msg = this.device.visualization(settings); 
+		const msg = this.device.visualization(settings);
 		this.connection.writeAll(msg);
 
 		return this._status(req, res);
@@ -242,13 +254,13 @@ export default class Service {
 
 	async _test(req, res) {
 		let testDelay = req.query.delay ? parseInt(req.query.delay, 10) : 2000;
-		
+
 		// testing the date time 
 		await testDateTimeIntegration(this.device, this.connection, testDelay);
 
 		// testing the brightness changes
 		await testBrightnessIntegration(this.device, this.connection, testDelay);
-		
+
 		// test the clock channel 
 		await testClockIntegration(this.device, this.connection, testDelay);
 
