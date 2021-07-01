@@ -29,9 +29,9 @@ const settings = {
 // This closure is needed since we do not run this file as module and
 // therefore would have no async-await.
 (async function () {
-	
+
 	// Let's asume we call index.js always over node
-	let address = process.argv.lenght === 3 ? process.argv[2] : null;
+	let address = process.argv[2] === undefined ? null : process.argv[2];
 
 	// node-bluetooth-serial-port does not support listing paired devices
 	// on linux – sais the documentation.
@@ -48,7 +48,7 @@ const settings = {
 			if (devices[i].name === 'Pixoo') {
 				address = devices[i].address.replace('-', ':');
 				break;
-			} 
+			}
 		}
 	}
 
@@ -58,7 +58,7 @@ const settings = {
 		return;
 	}
 	settings.connection.deviceMAC = address;
-	
+
 	// Let's disconnect properly when the app is done, shall we? Oh, there is some sh** going
 	// on with windows (as usual) let's handle that first.
 	if (process.platform === "win32") {
@@ -66,13 +66,13 @@ const settings = {
 			input: process.stdin,
 			output: process.stdout
 		});
-		
+
 		// If you can't make it fake it.
 		rl.on("SIGINT", function () {
 			process.emit("SIGINT");
 		});
 	}
-	
+
 	// There should be the MAC address by now and connect to the device if it
 	// is paired.
 	const connection = new Connection(settings.connection);
