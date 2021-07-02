@@ -87,6 +87,16 @@ export default class Connection extends EventEmitter {
 		});
 	}
 
+	async writeImage(result){
+		result.forEach(elt => {
+			this._port.write(elt,
+				function(err, bytesWritten) {
+					if (err) console.log(err);
+				}
+			);
+		})
+	}
+
 	/**
 	 *	Write all buffers in a list to the device.
 	 *

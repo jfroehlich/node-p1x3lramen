@@ -65,7 +65,8 @@ node index.js <MAC> <PORT>
 This will start the http server. Open `localhost:<PORT>` in a browser.
 
 Testing
---------------------------------------------------------------------------------
+--------------------------------------------------
+------------------------------
 
 I did write some tests to run them one after each other. You can run them with
 the web server with a configureable delay after each test.

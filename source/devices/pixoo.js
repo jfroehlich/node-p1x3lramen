@@ -1,4 +1,5 @@
 import { TinyColor } from '@ctrl/tinycolor';
+var Divoom = require('node-divoom-timebox-evo')
 
 const DEFAULTS = {
 	brightness: 50,				// integer values from 0-100
@@ -21,6 +22,17 @@ const DEFAULTS = {
 export default class Pixoo {
 	constructor(settings) {
 		this.config = Object.assign({}, settings, DEFAULTS);
+	}
+
+	// IMG
+
+	async setImg(){
+		console.log("nein")
+		var d = (new Divoom.TimeboxEvo()).createRequest('animation');
+		console.log("nein2")
+		return new Promise(function (resolve, reject) {
+			resolve(d.read('public/test.png'))
+		});
 	}
 
 	// --- Base Commands ---

@@ -55,10 +55,21 @@ export default class Service {
 		this.app.get("/test", this._test.bind(this));
 
 		this.app.get("/api/screenOff", this._screenOFF.bind(this));
+		this.app.get("/api/img", this._setImg.bind(this));
 
 		this.app.listen(this.config.port, () => {
 			console.log(`Listening on http://localhost:${this.config.port}`);
 		});
+	}
+
+	async _setImg(req, res){
+		console.log("ja")
+		await this.device.setImg().then(result => {
+			console.log("then")
+			console.log(result.asBinaryBuffer())
+			this.connection.writeImage(result.asBinaryBuffer());
+			return this._status(req, res);
+		})
 	}
 
 	async _screenOFF(req, res){
