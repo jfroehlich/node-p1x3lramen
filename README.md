@@ -129,6 +129,13 @@ This is a quick documentation of the HTTP API. For the range of values look at
 
 - `/test` A very basic integration test.
 
+#### Display Image
+To Display an image on the Pixoo, you musst first upload with `/api/upload` the picture and then set the image with`/api/img`
+
+- `/api/upload` Used to upload an image to the Server. 
+  Use the multipath/form and the key `file` for the actual file. Returns the path to the image, use this to set the image.
+- `/api/img?path=<String>` Displays the image on the Pixoo. With `/api/upload` you can get the path
+
 
 References
 --------------------------------------------------------------------------------

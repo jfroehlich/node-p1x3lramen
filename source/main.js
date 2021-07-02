@@ -2,6 +2,7 @@ import Connection from './connection.js';
 import Service from './service.js';
 import Pixoo from './devices/pixoo.js';
 
+
 import {
 	testClockIntegration,
 	testLigtingIntegration,

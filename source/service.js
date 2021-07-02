@@ -1,4 +1,6 @@
 import express from 'express';
+const fileUpload = require('express-fileupload');
+
 import {
 	testClockIntegration,
 	testLigtingIntegration,
@@ -6,6 +8,7 @@ import {
 	testClimateIntegration,
 	testBrightnessIntegration
 } from './integration.js';
+import Connection from "./connection";
 
 const DEFAULTS = {
 	port: 8000,
@@ -30,6 +33,9 @@ export default class Service {
 		this.connection = connection;
 		this.device = device;
 		this.app = express();
+		this.app.use(fileUpload({
+			createParentPath: true
+		}));
 
 		let apiRouter = express.Router();
 		apiRouter.use(this._autoconnect.bind(this));
@@ -42,6 +48,11 @@ export default class Service {
 		apiRouter.get("/visualization", this._visualization.bind(this));
 		apiRouter.get("/effect", this._effect.bind(this));
 		apiRouter.get("/climate", this._climate.bind(this));
+		//ScreenOff Feature
+		apiRouter.get("/screenOff", this._screenOFF.bind(this));
+		//IMG Feature
+		apiRouter.post("/upload", this._upload.bind(this));
+		apiRouter.get("/img", this._setImg.bind(this));
 
 		// routes
 
@@ -54,22 +65,40 @@ export default class Service {
 
 		this.app.get("/test", this._test.bind(this));
 
-		this.app.get("/api/screenOff", this._screenOFF.bind(this));
-		this.app.get("/api/img", this._setImg.bind(this));
-
 		this.app.listen(this.config.port, () => {
 			console.log(`Listening on http://localhost:${this.config.port}`);
 		});
 	}
 
-	async _setImg(req, res){
-		console.log("ja")
-		await this.device.setImg().then(result => {
-			console.log("then")
-			console.log(result.asBinaryBuffer())
+	async _upload(req, res){
+		let sampleFile;
+		let uploadPath;
+		if (!req.files || Object.keys(req.files).length == 0) {
+			return res.status(400).send('No files were uploaded.');
+		}
+		// The name of the input field (i.e. "sampleFile") is used to retrieve the uploaded file
+		sampleFile = req.files.file;
+		uploadPath = 'public' + '/uploads/' + sampleFile.name;
+		// Use the mv() method to place the file somewhere on your server
+		sampleFile.mv(uploadPath, async function(err) {
+			if (err)
+				return console.error(err);
+
+			console.log("done uploading: ")
+		})
+		return res.status(200).send(uploadPath);
+	}
+
+	 async _setImg(req, res){
+		 const settings = {};
+		 if (typeof req.query.path === 'string') {
+			 settings.path = req.query.path;
+		 }
+		 console.log(settings.path)
+		 await this.device.setImg(settings.path).then(result => {
 			this.connection.writeImage(result.asBinaryBuffer());
 			return this._status(req, res);
-		})
+		 })
 	}
 
 	async _screenOFF(req, res){
