@@ -83,8 +83,6 @@ export default class Service {
 		sampleFile.mv(uploadPath, async function(err) {
 			if (err)
 				return console.error(err);
-
-			console.log("done uploading: ")
 		})
 		return res.status(200).send(uploadPath);
 	}
@@ -94,7 +92,6 @@ export default class Service {
 		 if (typeof req.query.path === 'string') {
 			 settings.path = req.query.path;
 		 }
-		 console.log(settings.path)
 		 await this.device.setImg(settings.path).then(result => {
 			this.connection.writeImage(result.asBinaryBuffer());
 			return this._status(req, res);

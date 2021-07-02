@@ -18,7 +18,8 @@ used as app and accessing it over port 8000 or by using the ES6 modules directly
 
 
 Usage
---------------------------------------------------------------------------------
+----------------------------------------
+----------------------------------------
 
 The divoom pixoo uses bluetooth 5 so a computer with support for that would be
 a requirement.
@@ -64,6 +65,35 @@ node index.js <MAC> <PORT>
 ```
 This will start the http server. Open `localhost:<PORT>` in a browser.
 
+### Start with pm2
+
+```shell
+git clone https://github.com/jfroehlich/node-p1x3lramen
+cd node-p1x3lramen
+npm install
+```
+
+Then start the app:
+```shell
+pm2 start index.js -- <MAC>
+```
+
+#### pm2 with different Port (optional)
+```shell
+pm2 start index.js -- <MAC> <PORT>
+```
+This will start the http server. Open `localhost:<PORT>` in a browser.
+
+#### pm2 log
+```shell
+pm2 log
+```
+
+#### pm2 stop 
+```shell
+pm2 stop index
+```
+
 Testing
 --------------------------------------------------
 ------------------------------
@@ -90,7 +120,8 @@ type script that much. So, I decided to write my own little app. Feel free to
 use it and get inspired.
 
 HTTP API
---------------------------------------------------------------------------------
+----------------------------------
+----------------------------------------------
 
 This is a quick documentation of the HTTP API. For the range of values look at
 `source/devices/pxioo.js` for now. 
@@ -138,7 +169,8 @@ To Display an image on the Pixoo, you musst first upload with `/api/upload` the 
 
 
 References
---------------------------------------------------------------------------------
+------------------------------------
+--------------------------------------------
 
 This project is build using the ingenuity of many others:
 

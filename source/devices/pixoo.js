@@ -27,9 +27,7 @@ export default class Pixoo {
 	// IMG
 
 	async setImg(path){
-		console.log("nein")
 		var d = (new Divoom.TimeboxEvo()).createRequest('animation');
-		console.log("nein2")
 		return new Promise(function (resolve, reject) {
 			resolve(d.read(path))
 		});
