@@ -20,7 +20,7 @@ const DEFAULTS = {
 
 export default class Pixoo {
 	constructor(settings) {
-		this.config = Object.assign({}, settings, DEFAULTS);
+		this.config = Object.assign({}, DEFAULTS, settings);
 	}
 
 	// --- Base Commands ---
