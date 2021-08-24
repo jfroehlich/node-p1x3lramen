@@ -2,14 +2,6 @@ import Connection from './connection.js';
 import Service from './service.js';
 import Pixoo from './devices/pixoo.js';
 
-import {
-	testClockIntegration,
-	testLigtingIntegration,
-	testDateTimeIntegration,
-	testClimateIntegration,
-	testBrightnessIntegration
-} from './integration.js';
-
 const settings = {
 	connection: {
 		deviceMAC: '',
@@ -32,6 +24,7 @@ const settings = {
 	
 	// Let's asume we call index.js always over node
 	let address = process.argv.lenght === 3 ? process.argv[2] : null;
+
 
 	// node-bluetooth-serial-port does not support listing paired devices
 	// on linux – sais the documentation.
@@ -104,7 +97,5 @@ const settings = {
 		console.log("Error:", error);
 	});
 
-	//console.log('Connecting to Pixoo:', address);
-	//await connection.connect(address);
 	service.start(connection, device);
 })();
