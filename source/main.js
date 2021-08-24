@@ -1,10 +1,11 @@
-import Connection from './connection.js';
-import Service from './service.js';
-import Pixoo from './devices/pixoo.js';
+import Connection from "./connection.js";
+import Service from "./service.js";
+import Pixoo from "./devices/pixoo.js";
+import fs from "fs";
 
-const settings = {
+const DEFAULTS = {
 	connection: {
-		deviceMAC: '',
+		deviceMAC: null,
 		maxConnectAttempts: 3,
 		connectionAttemptDelay: 500
 	},
@@ -17,38 +18,69 @@ const settings = {
 		autoConnect: true
 	}
 };
+const HELP_TEXT = `
+node index.js <option>
+
+OPTIONS
+  -a	
+  	Autodetect MAC address of device. Doesn't work on linux.
+  
+  -m <MAC>
+	Set the MAC of the device manually.
+
+  -c <PATH>
+	Path to a JSON file with config settings.
+`;
 
 // This closure is needed since we do not run this file as module and
 // therefore would have no async-await.
 (async function () {
-	// Let's asume we call index.js always over node
-	let deviceMac = process.argv[2] === undefined ? null : process.argv[2];
 
-	// node-bluetooth-serial-port does not support listing paired devices
-	// on linux – sais the documentation.
-	if (deviceMac === null && process.platform === 'linux') {
-		console.log("node index.js <DEVICEMAC>")
-		console.log("Can't list paired devices.");
-		return;
+	// Let's asume we call index.js always over node
+	const args = process.argv.slice(2);
+	let settings, config;
+	
+	switch (args[0]) {
+		case "-c":
+			settings = JSON.parse(fs.readFileSync(args[1]));
+			break;
+		case "-a":
+			// node-bluetooth-serial-port does not support listing paired devices
+			// on linux – sais the documentation.
+			if (process.platform === 'linux') {
+				console.log(HELP_TEXT);
+				console.log("Can't auto-detect paired devices.");
+				process.exit(1);
+			}
+			break;
+		case "-m":
+			settings = {connection: {deviceMAC: args[1]}};
+			break;
+		default:
+			console.log(HELP_TEXT);
+			process.exit(0);
 	}
 
-	if (deviceMac === null) {
+	config = Object.assign({}, DEFAULTS, settings);
+
+	if (config.connection.deviceMAC === null) {
 		// Attempt MAC auto detect
 		const devices = await Connection.pairedDevices();
 		for (let i = 0; i < devices.length; i++) {
 			if (devices[i].name === 'Pixoo') {
-				deviceMac = devices[i].address.replace('-', ':');
+				config.connection.deviceMAC = devices[i].address.replace('-', ':');
 				break;
 			} 
 		}
 	}
 
-	if (deviceMac === null) {
-		console.log("node index.js <DEVICEMAC>")
-		console.log("Can't list paired devices.");
-		return;
+	if (config.connection.deviceMAC === null) {
+		console.log(HELP_TEXT);
+		console.log("Can't find paired devices.");
+		process.exit(1);
 	}
-	settings.connection.deviceMAC = deviceMac;
+
+	console.log("Found device:", config.connection.deviceMAC);
 	
 	// Let's disconnect properly when the app is done, shall we? Oh, there is some sh** going
 	// on with windows (as usual) let's handle that first.
@@ -66,9 +98,9 @@ const settings = {
 	
 	// There should be the MAC address by now and connect to the device if it
 	// is paired.
-	const connection = new Connection(settings.connection);
-	const device = new Pixoo(settings.device);
-	const service = new Service(settings.service);
+	const connection = new Connection(config.connection);
+	const device = new Pixoo(config.device);
+	const service = new Service(config.service);
 
 	// Let's disconnect properly from the device.
 	process.on('SIGINT', (code) => {
@@ -79,7 +111,7 @@ const settings = {
 
 	// let's log a bit.
 	connection.on("connecting", attempt => {
-		console.log(`Connection attempt ${attempt+1}/${settings.connection.maxConnectAttempts}`);
+		console.log(`Connection attempt ${attempt+1}/${config.connection.maxConnectAttempts}`);
 	});
 	connection.on("received", buffer => {
 		console.log("<=", buffer.toString("hex"));

@@ -50,12 +50,40 @@ npm install
 Then start the app:
 
 ```sh
-node index.js
+node index.js -a
 ```
 
 This will start the http server. Open `localhost:8000` in a browser. This
 should auto connect to the device. You can disconnect by using the HTTP API or by
 killing the app with `ctrl-c`.
+
+You could also define a JSON config file with further settings like this:
+
+```sh
+node index.js -c ~/p1x3lramen-config.json
+```
+
+The config could contain following settings:
+
+```json
+{
+	"connection": {
+		"deviceMAC": null,
+		"maxConnectAttempts": 3,
+		"connectionAttemptDelay": 500
+	},
+	"pixoo": {
+		"brightness": 50
+	},
+	"service": {
+		"hostname": "localhost",
+		"port": "8000",
+		"autoConnect": true
+	}
+}
+```
+
+The deviceMAC setting set to `null` will run the auto-detect except on linux.
 
 
 Testing
