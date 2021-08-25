@@ -56,6 +56,7 @@ export default class Pixoo {
 	datetime(settings) {
 		settings = settings || {};
 		let date = settings.date || new Date();
+
 		const message = [
 			"18",										// Prefix 
 			this._intHex(Number(date.getFullYear().toString().padStart(4, "0").slice(2))),
@@ -174,10 +175,41 @@ export default class Pixoo {
 	}
 	
 	// --- Cloud channel ---
+
+	cloud(settings) {
+		throw new Error("Cloud channel is not implemented yet.");
+	}
 	
 	// --- Custom channel ---
+
+	custom(settings) {
+		throw new Error("Custom channel is not implemented yet.");
+	}
 	
 	// --- Switch channels ---
+
+	channel(settings) {
+		settings = settings || {};
+		settings.mode = settings.mode || "time";
+
+		const modes = {
+			clock: "00",
+			lighting: "01",
+			cloud: "02",
+			effects: "03",
+			visualization: "04",
+			animation: "05",
+			scoreboard: "06"
+		};
+
+		const message = [
+			"45",
+			modes[settings.mode] || "00"
+		].join("");
+		console.log("mode:", message);
+
+		return this._compile(this._assembleMessage(message));
+	}
 
 	// --- Helper methods ---
 

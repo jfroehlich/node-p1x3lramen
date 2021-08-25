@@ -42,6 +42,7 @@ export default class Service {
 		apiRouter.get("/visualization", this._visualization.bind(this));
 		apiRouter.get("/effect", this._effect.bind(this));
 		apiRouter.get("/climate", this._climate.bind(this));
+		apiRouter.get("/channel", this._channel.bind(this));
 
 		// routes
 
@@ -95,6 +96,19 @@ export default class Service {
 
 	// --- basic commands ---
 	
+	async _channel(req, res) {
+		const settings = {};
+		const modes = ["clock", "lighting", "cloud", "effects", "visulalization", "animation", "scoreboard"];
+		if (typeof req.query.mode === 'string') {
+			settings.mode = modes.includes(req.query.mode) ? req.query.mode : "time";
+		}
+
+		const msg = this.device.channel(settings); 
+		this.connection.writeAll(msg);
+
+		return this._status(req, res);
+	}
+
 	async _brightness(req, res) {
 		const settings = {}; 	
 		if (req.query.level && parseInt(req.query.level, 10)) {
