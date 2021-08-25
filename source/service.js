@@ -15,7 +15,7 @@ const DEFAULTS = {
 
 export default class Service {
 	constructor(settings) {
-		this.config = Object.assign({}, settings, DEFAULTS)
+		this.config = Object.assign({}, DEFAULTS, settings)
 		this.connection = null;
 		this.device = null;
 		this.app = null;
