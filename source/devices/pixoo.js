@@ -245,14 +245,14 @@ export default class Pixoo {
 	}
 
 	_dissambleMessage(msg) {
-	  let answer = {};
-	  answer.ascii = msg;
-	  answer.crc = msg.slice(-6, msg.length - 2);
-	  answer.payloadLength = msg.slice(2, 6);
-	  answer.command = msg.slice(8, 10);
-	  answer.fixed = msg.slice(10, 12);
-	  answer.cmddata = msg.slice(12, msg.length - 6);
-	  return answer;
+		let answer = {};
+		answer.ascii = msg;
+		answer.crc = msg.slice(-6, msg.length - 2);
+		answer.payloadLength = msg.slice(2, 6);
+		answer.command = msg.slice(8, 10);
+		answer.fixed = msg.slice(10, 12);
+		answer.cmddata = msg.slice(12, msg.length - 6);
+		return answer;
 	}
 
 	/**
