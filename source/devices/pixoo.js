@@ -198,8 +198,8 @@ export default class Pixoo {
 			cloud: "02",
 			effects: "03",
 			visualization: "04",
-			animation: "05",
-			scoreboard: "06"
+			custom: "05",
+			score: "06"
 		};
 
 		const message = [

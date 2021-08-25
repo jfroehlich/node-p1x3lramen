@@ -10,6 +10,16 @@
 
 		<section>
 			<h2>Basic commands</h2>
+			<ul class="field">
+				<li><input type="radio" name="channel" value="clock" id="channel-clock"/><label for="channel-clock">Clock</label></li>
+				<li><input type="radio" name="channel" value="lighting" id="channel-lighting"/><label for="channel-lighting">Lighting</label></li>
+				<li><input type="radio" name="channel" value="cloud" id="channel-cloud"/><label for="channel-cloud">Cloud</label></li>
+				<li><input type="radio" name="channel" value="effects" id="channel-effects"/><label for="channel-effects">Effects</label></li>
+				<li><input type="radio" name="channel" value="visualization" id="channel-visualization"/><label for="channel-visualization">Visualization</label></li>
+				<li><input type="radio" name="channel" value="custom" id="channel-custom"/><label for="channel-custom">Custom</label></li>
+				<li><input type="radio" name="channel" value="score" id="channel-score"/><label for="channel-score">Score</label></li>
+				
+			</ul>
 			<p class="field">
 				<label for="brightness">Brightness</label>
 				<input name="brightness" type="range" min="0" max="100" step="1"/>
@@ -101,7 +111,19 @@
 				.then(result => {
 					console.log("Success:", result, "brightness:", result.config.brightness);
 				});
-		})
-	</script>
+		});
+
+		document.querySelectorAll('input[name="channel"]').forEach(item => {
+			item.addEventListener('change', function (event) { 
+				console.log("channel:", event.target.value);
+				fetch("http://localhost:8000/api/channel?mode=" + event.target.value, {method: "GET" })
+					.then(response => response.json())
+					.then(result => {
+						console.log("Success:", result);
+				});
+			});
+
+		});
+		</script>
 </body>
 </html>

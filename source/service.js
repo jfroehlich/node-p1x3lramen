@@ -12,7 +12,6 @@ const DEFAULTS = {
 	autoConnect: true
 };
 
-
 export default class Service {
 	constructor(settings) {
 		this.config = Object.assign({}, DEFAULTS, settings)
@@ -98,7 +97,7 @@ export default class Service {
 	
 	async _channel(req, res) {
 		const settings = {};
-		const modes = ["clock", "lighting", "cloud", "effects", "visulalization", "animation", "scoreboard"];
+		const modes = ["clock", "lighting", "cloud", "effects", "visualization", "custom", "score"];
 		if (typeof req.query.mode === 'string') {
 			settings.mode = modes.includes(req.query.mode) ? req.query.mode : "time";
 		}
