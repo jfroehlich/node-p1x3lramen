@@ -1,11 +1,11 @@
-import express from 'express';
+import express from "express";
 import {
 	testClockIntegration,
 	testLigtingIntegration,
 	testDateTimeIntegration,
 	testClimateIntegration,
 	testBrightnessIntegration
-} from './integration.js';
+} from "./integration.js";
 
 const DEFAULTS = {
 	port: 8000,
@@ -14,7 +14,7 @@ const DEFAULTS = {
 
 export default class Service {
 	constructor(settings) {
-		this.config = Object.assign({}, DEFAULTS, settings)
+		this.config = Object.assign({}, DEFAULTS, settings);
 		this.connection = null;
 		this.device = null;
 		this.app = null;
@@ -45,12 +45,12 @@ export default class Service {
 
 		// routes
 
-		this.app.use('/', express.static('public'));
+		this.app.use("/", express.static("public"));
 
 		this.app.get("/api/status", this._status.bind(this));
 		this.app.get("/api/connect", this._connect.bind(this));
 		this.app.get("/api/disconnect", this._disconnect.bind(this));
-		this.app.use('/api', apiRouter);
+		this.app.use("/api", apiRouter);
 
 		this.app.get("/test", this._test.bind(this));
 
@@ -98,7 +98,7 @@ export default class Service {
 	async _channel(req, res) {
 		const settings = {};
 		const modes = ["clock", "lighting", "cloud", "effects", "visualization", "custom", "score"];
-		if (typeof req.query.mode === 'string') {
+		if (typeof req.query.mode === "string") {
 			settings.mode = modes.includes(req.query.mode) ? req.query.mode : "time";
 		}
 
@@ -123,8 +123,8 @@ export default class Service {
 	async _fullday(req, res) {
 		const settings = {}; 	
 
-		if (typeof req.query.enable === 'string') {
-			settings.enable = req.query.enable === 'true' ? true : false;
+		if (typeof req.query.enable === "string") {
+			settings.enable = req.query.enable === "true" ? true : false;
 		}
 		const msg = this.device.fullday(settings); 
 		this.connection.writeAll(msg);
@@ -140,8 +140,8 @@ export default class Service {
 		msg = this.device.datetime(settings); 
 		this.connection.writeAll(msg);
 
-		if (typeof req.query.fulldayMode === 'string') {
-			settings.enable = req.query.fulldayMode === 'true' ? true : false;
+		if (typeof req.query.fulldayMode === "string") {
+			settings.enable = req.query.fulldayMode === "true" ? true : false;
 			msg = this.device.fullday(settings); 
 			this.connection.writeAll(msg);
 		}
@@ -176,8 +176,8 @@ export default class Service {
 		if (req.query.mode && parseInt(req.query.mode, 10)) {
 			settings.mode = parseInt(req.query.mode, 10);
 		}
-		if (typeof req.query.powerScreen === 'string') {
-			settings.powerScreen = req.query.powerScreen === 'true' ? true : false;
+		if (typeof req.query.powerScreen === "string") {
+			settings.powerScreen = req.query.powerScreen === "true" ? true : false;
 		}
 
 		const msg = this.device.lighting(settings); 
@@ -192,19 +192,19 @@ export default class Service {
 		if (req.query.mode && parseInt(req.query.mode, 10)) {
 			settings.mode = parseInt(req.query.mode, 10);
 		}
-		if (typeof req.query.showTime === 'string') {
-			settings.showTime = req.query.showTime === 'true' ? true : false;
+		if (typeof req.query.showTime === "string") {
+			settings.showTime = req.query.showTime === "true" ? true : false;
 		}
-		if (typeof req.query.showWeather === 'string') {
-			settings.showWeather = req.query.showWeather === 'true' ? true : false;
+		if (typeof req.query.showWeather === "string") {
+			settings.showWeather = req.query.showWeather === "true" ? true : false;
 		}
-		if (typeof req.query.showTemperature === 'string') {
-			settings.showTemperature = req.query.showTemperature === 'true' ? true : false;
+		if (typeof req.query.showTemperature === "string") {
+			settings.showTemperature = req.query.showTemperature === "true" ? true : false;
 		}
-		if (typeof req.query.showCalendar === 'string') {
-			settings.showCalendar = req.query.showCalendar === 'true' ? true : false;
+		if (typeof req.query.showCalendar === "string") {
+			settings.showCalendar = req.query.showCalendar === "true" ? true : false;
 		}
-		if (typeof req.query.color === 'string' && req.query.color.length === 6) {
+		if (typeof req.query.color === "string" && req.query.color.length === 6) {
 			settings.color = req.query.color;
 		}
 		const msg = this.device.clock(settings); 
@@ -275,7 +275,7 @@ export default class Service {
 		message = this.device.datetime();
 		this.connection.writeAll(message);
 
-		message = this.device.clock({mode: 6, showTime: true, showWeather: false, showTemperature: false, showCalendar: false, color: 'ffffff'});
+		message = this.device.clock({mode: 6, showTime: true, showWeather: false, showTemperature: false, showCalendar: false, color: "ffffff"});
 		this.connection.writeAll(message);
 
 		return this._status(req, res);

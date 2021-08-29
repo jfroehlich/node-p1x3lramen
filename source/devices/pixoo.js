@@ -1,8 +1,9 @@
-import { TinyColor } from '@ctrl/tinycolor';
+import { TinyColor } from "@ctrl/tinycolor";
+import { Buffer } from "buffer";
 
 const DEFAULTS = {
 	brightness: 50,				// integer values from 0-100
-	color: 'ffffff',			// currently only hex colors
+	color: "ffffff",			// currently only hex colors
 	weather: 0,					// weather modes: 1 clear, 3 cloudy sky, 5 thunderstorm, 6 rain, 8 snow, 9 fog
 	temperature: 0,				// temperature from -127 to 128
 	lightingMode: 0,			// Lighting modes: 0 = Custom, 1 = love, 2 = plants, 3 = no mosquito, 4 = sleep
@@ -35,7 +36,7 @@ export default class Pixoo {
 		const message = [
 			"2d",										// Prefix for light
 			this._boolHex(this.config.fulldayMode)
-		].join('');
+		].join("");
 		return this._compile(this._assembleMessage(message));
 	}
 	
@@ -49,7 +50,7 @@ export default class Pixoo {
 		const message = [
 			"74",										// Prefix 
 			this._percentHex(this.config.brightness)	// Brightness from 0-100
-		].join('');
+		].join("");
 		return this._compile(this._assembleMessage(message));
 	}
 
@@ -67,7 +68,7 @@ export default class Pixoo {
 			this._intHex(date.getMinutes()),
 			this._intHex(date.getSeconds()),
 			"00"
-		].join('');
+		].join("");
 		return this._compile(this._assembleMessage(message));
 	}
 
@@ -80,7 +81,7 @@ export default class Pixoo {
 			"5F",										// prefix 
 			(this.config.temperature >= 0) ? this._intHex(this.config.temperature) : this._intHex(256 + this.config.temperature),
 			this._intHex(this.config.weather)
-		].join('');
+		].join("");
 		return this._compile(this._assembleMessage(message));
 	}
 
@@ -95,7 +96,7 @@ export default class Pixoo {
 	clock(settings) {
 		settings = settings || {};
 		this.config.clockMode = settings.mode || this.config.clockMode;
-		this.config.showTime = (typeof settings.showTime === "boolean") ? settings.showTime : this.config.showTime;;
+		this.config.showTime = (typeof settings.showTime === "boolean") ? settings.showTime : this.config.showTime;
 		this.config.showWeather = (typeof settings.showWeather === "boolean") ? settings.showWeather : this.config.showWeather;
 		this.config.showTemperature = (typeof settings.showTemperature === "boolean") ? settings.showTemperature : this.config.showTemperature;
 		this.config.showCalendar = (typeof settings.showCalendar === "boolean") ? settings.showCalendar : this.config.showCalendar;
@@ -109,7 +110,7 @@ export default class Pixoo {
 			this._boolHex(this.config.showTemperature),
 			this._boolHex(this.config.showCalendar),
 			this._colorHex(this.config.color)
-		].join('');
+		].join("");
 		return this._compile(this._assembleMessage(message));
 	}
 
@@ -129,7 +130,7 @@ export default class Pixoo {
 			this._intHex(this.config.lightingMode),		// lighting mode
 			this._boolHex(this.config.powerScreen),		// power
 			"000000"									// suffix or functions?
-		].join('');
+		].join("");
 		return this._compile(this._assembleMessage(message));
 	}
 
@@ -144,7 +145,7 @@ export default class Pixoo {
 			"450600",										// Prefix
 			this._intLittleHex(Math.min(999, this.config.redScore)),		// score for red
 			this._intLittleHex(Math.min(999, this.config.blueScore))		// score for blue
-		].join('');
+		].join("");
 		return this._compile(this._assembleMessage(message));
 	}
 	
@@ -157,7 +158,7 @@ export default class Pixoo {
 		const message = [
 			"4503",										// Prefix
 			this._intHex(this.config.effectMode),		// visualization mode
-		].join('');
+		].join("");
 		return this._compile(this._assembleMessage(message));
 	}
 	
@@ -168,9 +169,9 @@ export default class Pixoo {
 		this.config.visualizationMode = settings.mode || this.config.visualizationMode;
 
 		const message = [
-			"4504",										// Prefix
-			this._intHex(this.config.visualizationMode),		// visualization mode
-		].join('');
+			"4504",											// Prefix
+			this._intHex(this.config.visualizationMode),	// visualization mode
+		].join("");
 		return this._compile(this._assembleMessage(message));
 	}
 	
@@ -215,14 +216,14 @@ export default class Pixoo {
 
 	_intHex(int) {
 		if (int > 255 || int < 0) {
-			throw new Error('numberHex works only with number between 0 and 255');
+			throw new Error("numberHex works only with number between 0 and 255");
 		}
 		return Math.round(int).toString(16).padStart(2, "0");
 	}
 
 	_intLittleHex(value) {
 		if (value > 65535 || value < 0) {
-			throw new TypeError('intLittleHex only supports value between 0 and 65535');
+			throw new TypeError("intLittleHex only supports value between 0 and 65535");
 		}
 		var byte1 = (value & 0xFF).toString(16).padStart(2, "0");
 		var byte2 = ((value >> 8) & 0xFF).toString(16).padStart(2, "0");
@@ -248,14 +249,14 @@ export default class Pixoo {
 	}
 
 	_unHex(str) {
-		let result = '';
+		let result = "";
 		if (str.length % 2 !== 0) {
-			throw new Error('The string length is not a multiple of 2');
+			throw new Error("The string length is not a multiple of 2");
 		}
 		for (let i = 0, l = str.length; i < l; i += 2) {
 			var toHex = parseInt(str.substr(i, 2), 16);
 			if (isNaN(toHex)) {
-				throw new Error('str contains non hex character');
+				throw new Error("str contains non hex character");
 			}
 			result += String.fromCharCode(toHex);
 		}
@@ -265,7 +266,7 @@ export default class Pixoo {
 	_assembleMessage(payload) {
 		let lengthHS = this._intLittleHex((payload.length + 4) / 2);
 		
-		let msg = '' + lengthHS + payload;
+		let msg = "" + lengthHS + payload;
 		let sum = 0;
 		for (var i = 0, l = msg.length; i < l; i+= 2) {
 			sum += parseInt(msg.substr(i, 2), 16);
@@ -273,7 +274,7 @@ export default class Pixoo {
 		let crc = sum % 65536;
 		let crcHS = this._intLittleHex(crc); 
 
-		return [ '01', lengthHS, payload, crcHS, '02' ].join('');
+		return [ "01", lengthHS, payload, crcHS, "02" ].join("");
 	}
 
 	_dissambleMessage(msg) {
@@ -296,12 +297,12 @@ export default class Pixoo {
 	_compile(message) {
 		let buffers = [];
 		message.match(/.{1,1332}/g).forEach(part => {
-			buffers.push(Buffer.from(this._unHex(part), 'binary'));
+			buffers.push(Buffer.from(this._unHex(part), "binary"));
 		});
 		return buffers;
 	}
 
 	_decompile(buffer) {
-		return buffer.toString('ascii');	
+		return buffer.toString("ascii");	
 	}
 }
