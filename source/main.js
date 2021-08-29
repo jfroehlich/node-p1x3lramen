@@ -1,3 +1,4 @@
+/* eslint-env node */
 import Connection from "./connection.js";
 import Service from "./service.js";
 import Pixoo from "./devices/pixoo.js";
@@ -47,7 +48,7 @@ OPTIONS
 		case "-a":
 			// node-bluetooth-serial-port does not support listing paired devices
 			// on linux – sais the documentation.
-			if (process.platform === 'linux') {
+			if (process.platform === "linux") {
 				console.log(HELP_TEXT);
 				console.log("Can't auto-detect paired devices.");
 				process.exit(1);
@@ -67,8 +68,8 @@ OPTIONS
 		// Attempt MAC auto detect
 		const devices = await Connection.pairedDevices();
 		for (let i = 0; i < devices.length; i++) {
-			if (devices[i].name === 'Pixoo') {
-				config.connection.deviceMAC = devices[i].address.replace('-', ':');
+			if (devices[i].name === "Pixoo") {
+				config.connection.deviceMAC = devices[i].address.replace("-", ":");
 				break;
 			} 
 		}
@@ -103,7 +104,7 @@ OPTIONS
 	const service = new Service(config.service);
 
 	// Let's disconnect properly from the device.
-	process.on('SIGINT', (code) => {
+	process.on("SIGINT", (code) => {
 		service.stop();
 		connection.disconnect();
 		process.exit();
@@ -122,7 +123,7 @@ OPTIONS
 	});
 	connection.on("connected", () => {
 		console.log("Connected.");
-	})
+	});
 	connection.on("error", error => {
 		console.log("Error:", error);
 	});

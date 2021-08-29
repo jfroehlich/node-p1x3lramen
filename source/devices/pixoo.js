@@ -1,3 +1,4 @@
+/* eslint-env node */
 import { TinyColor } from "@ctrl/tinycolor";
 import { Buffer } from "buffer";
 

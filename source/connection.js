@@ -1,8 +1,9 @@
-import {EventEmitter} from 'events';
-import BluetoothSerialPort from 'node-bluetooth-serial-port';
+/* eslint-env node */
+import {EventEmitter} from "events";
+import BluetoothSerialPort from "node-bluetooth-serial-port";
 
 const DEFAULTS = {
-	deviceMAC: '',
+	deviceMAC: "",
 	maxConnectAttempts: 3,
 	connectionAttemptDelay: 500
 };
@@ -14,8 +15,8 @@ export default class Connection extends EventEmitter {
 		this.config = Object.assign({}, DEFAULTS, settings);
 		this._connection = null;
 		this._port = Connection.port;
-		this._port.on('data', buffer => {
-			this.emit('received', buffer);
+		this._port.on("data", buffer => {
+			this.emit("received", buffer);
 		});
 	}
 
@@ -47,19 +48,15 @@ export default class Connection extends EventEmitter {
 			throw new Error("No device MAC adress to connect to.");
 		}
 
-		let attempts = 0;
-		
-		// Log a connection attempt
-		const log = msg => console.log(`[LOCAL]: Connection ${attempts+1}/${this.config.maxConnectAttempts}: ${msg}`);
-
 		// Let's try connecting
+		let attempts = 0;
 		while (attempts < this.config.maxConnectAttempts) {
-			this.emit('connecting', attempts, this._connection);
+			this.emit("connecting", attempts, this._connection);
 			try {
 				const res = await this._attempt();
 				this._connection = res;
-				this.emit('connected', this._connection);
-				return res
+				this.emit("connected", this._connection);
+				return res;
 			} catch (error) {
 				this.emit("error", error);
 				attempts++;
@@ -79,11 +76,11 @@ export default class Connection extends EventEmitter {
 	 * Write a buffer to the device
 	 */
 	async write(buffer) {
-		this.emit('sending', buffer);
+		this.emit("sending", buffer);
 		return new Promise((resolve, reject) => {
 			this._port.write(buffer, (error, bytes) => {
-				return !!error ? reject(error) : resolve(bytes);
-			})
+				return error ? reject(error) : resolve(bytes);
+			});
 		});
 	}
 

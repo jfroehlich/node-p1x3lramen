@@ -1,4 +1,4 @@
-
+/* eslint-env node */
 /**
  * Clock channel integration tests.
  *
